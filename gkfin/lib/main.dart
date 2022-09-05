@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:gkfin/views/login.dart';
+//import 'package:gkfin/widgets/login_form.dart';
 
 void main() {
   runApp(const MyApp());
@@ -23,20 +24,33 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-
+  
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       // Remove the debug banner
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'GK Fin',
       theme: ThemeData(
         primarySwatch: Colors.green,
         backgroundColor: Colors.white,
+        fontFamily: 'Ubuntu',
+
+        // Tex Styling for Headlines, titles, bodies, and more...
+        textTheme: const TextTheme(
+          headline1: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.black54),
+        ),
+
+        // @TODO add app bar theme here...
+
       ),
-      //home: const LoginPage(title: 'Login UI'),
-      home: const LoginView(title: 'Login UI'),
+
+      // @TODO check if user validation is cached
+      // If true: Redirect to main view
+      // Else: Redirect to LoginView
+      home: const LoginView(title: 'Login UI',),
+    
     );
   }
 }

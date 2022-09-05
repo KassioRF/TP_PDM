@@ -1,21 +1,22 @@
 // Reference source: https://github.com/hawier-dev/flutter-login-ui/blob/main/lib/main.dart
 
+// Reference source: https://github.com/hawier-dev/flutter-login-ui/blob/main/lib/main.dart
+
 import 'package:flutter/material.dart';
 import 'package:gkfin/assets/bg_clipper.dart';
-import 'package:gkfin/views/register.dart';
 
-class LoginView extends StatefulWidget {
-  const LoginView({Key? key, required this.title}) : super(key: key);
+class RegisterView extends StatefulWidget {
+  const RegisterView({Key? key, required this.title}) : super(key: key);
   
   final String title;
 
 
   @override
-  State<LoginView> createState() => _LoginView();
+  State<RegisterView> createState() => _RegisterView();
 
 }
 
-class _LoginView extends State<LoginView> {
+class _RegisterView extends State<RegisterView> {
   final _formKey = GlobalKey<FormState>();
   var rememberValue = false;
 
@@ -34,11 +35,11 @@ class _LoginView extends State<LoginView> {
         children: <Widget>[
 
           ClipPath(
-            clipper: WaveClipper(waveDeep: 0, waveDeep2: 50),
+            clipper: WaveClipper(waveDeep: 5, waveDeep2: 45),
             child: Container(
               padding: const EdgeInsets.only(bottom: 450),
               color: Colors.green.withOpacity(.8),
-              height: 180,
+              height: 140,
               alignment: Alignment.center,
               
             ),
@@ -48,7 +49,7 @@ class _LoginView extends State<LoginView> {
               child: Container(
                 padding: const EdgeInsets.only(bottom: 50),
                 color: Colors.green.withOpacity(.3),
-                height: 180,
+                height: 130,
                 alignment: Alignment.center,
                 
               ),
@@ -63,16 +64,31 @@ class _LoginView extends State<LoginView> {
                 children: <Widget>[
                   // Screen Title                  
                   Text(
-                    'Bem vindo!',
+                    'Cadastro',
                     style: Theme.of(context).textTheme.headline1,
                   ),
 
-                  const SizedBox(height: 45,), // space between elements
+                  const SizedBox(height: 20,), // space between elements
                   // Form inputs
                   Form(
                     key: _formKey,
                     child: Column(                
-                      children: [                        
+                      children: [
+                        // Name field
+                        TextFormField(
+                          maxLines: 1,
+                          decoration: InputDecoration(
+                            hintText: 'Seu nome',
+                            fillColor: Colors.white,
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                    
+                          ),
+                        ),
+                        const SizedBox(height: 20,), // space between elements                        
+                        
                         // Email field
                         TextFormField(
                           //@TODO Validate email here!
@@ -114,15 +130,13 @@ class _LoginView extends State<LoginView> {
                             TextButton(
                               onPressed: () {
                                 // @TODO Redirect to register view!
-                                //print('pressed');
                                 //Navigator.pushReplacement(
                                 //  context,
                                 //  MaterialPageRoute(
                                 //    builder: (context) => 
-                                //    //@TODO REMIND PASSWORD 
-                                //    //const RegisterView(title: 'Register UI')
+                                //    const RegisterPage(title: 'Register UI')
                                 //  ),
-                                //);
+                                //),
                               },
                               child: const Text('lembrar senha',),
                             ),
@@ -159,13 +173,13 @@ class _LoginView extends State<LoginView> {
                             TextButton(
                               onPressed: () {
                                 // @TODO Redirect to register view!
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => 
-                                    const RegisterView(title: 'Register UI')
-                                  ),
-                                );
+                                //Navigator.pushReplacement(
+                                //  context,
+                                //  MaterialPageRoute(
+                                //    builder: (context) => 
+                                //    const RegisterPage(title: 'Register UI')
+                                //  ),
+                                //),
                               },
                               child: const Text('Cadastre-se',),
                             ),
