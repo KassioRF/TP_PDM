@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:gkfin/assets/bg_clipper.dart';
+import 'package:gkfin/views/login.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({Key? key, required this.title}) : super(key: key);
@@ -122,30 +123,7 @@ class _RegisterView extends State<RegisterView> {
                           ),
                         ),
                         // CheckBox Remember me
-        
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            //const Text('Não está cadastrado?',),
-                            TextButton(
-                              onPressed: () {
-                                // @TODO Redirect to register view!
-                                //Navigator.pushReplacement(
-                                //  context,
-                                //  MaterialPageRoute(
-                                //    builder: (context) => 
-                                //    const RegisterPage(title: 'Register UI')
-                                //  ),
-                                //),
-                              },
-                              child: const Text('lembrar senha',),
-                            ),
-                            //const SizedBox(height: 20,), // space between elements
-                          ],
-                          
-                        ),
-
-                        
+                                
                         const SizedBox(height: 20,), // space between elements
                         //SignIn Buttom
                         ElevatedButton(
@@ -157,7 +135,7 @@ class _RegisterView extends State<RegisterView> {
                             padding: const EdgeInsets.fromLTRB(40, 15, 40, 15),
                           ),
                           child: const Text(
-                            'Entrar',
+                            'Cadastrar',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
@@ -169,19 +147,19 @@ class _RegisterView extends State<RegisterView> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text('Não está cadastrado?',),
+                            const Text('Já possui cadastro?',),
                             TextButton(
                               onPressed: () {
                                 // @TODO Redirect to register view!
-                                //Navigator.pushReplacement(
-                                //  context,
-                                //  MaterialPageRoute(
-                                //    builder: (context) => 
-                                //    const RegisterPage(title: 'Register UI')
-                                //  ),
-                                //),
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => 
+                                    const LoginView(title: 'Login UI')
+                                  ),
+                                );
                               },
-                              child: const Text('Cadastre-se',),
+                              child: const Text('Entrar',),
                             ),
                             const SizedBox(height: 60,), // space between elements
                           ],
