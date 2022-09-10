@@ -4,6 +4,9 @@
 
 import 'package:flutter/material.dart';
 
+import '../models/records.dart';
+import '../data/dummy_data.dart';
+
 class HomeView extends StatefulWidget {
   const HomeView({super.key, required this.title});
 
@@ -14,131 +17,145 @@ class HomeView extends StatefulWidget {
   _HomeView createState() => _HomeView();
 }
 
-class _HomeView extends State<HomeView> {
+class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
   
   final String _currMonth = 'Setembro de 2022';
-
-
+  late TabController _tabController;
   int _bottomNavId = 0;
+  List<Record> _mockData = DUMMY_RECORDS;
+  
+  @override
+  void initState(){
+    super.initState();
+    _tabController = TabController(vsync: this, length: 2);
+  }
   // ignore: empty_constructor_bodies
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // text?: (Hello, User?)
+        toolbarHeight: 60,
+        leading: IconButton( icon: Icon(Icons.account_circle, size:40), onPressed: () {},),
+        title: Text('Hello, User'),
         actions: [
-          IconButton(onPressed: () {}, 
-          // move icon to left
-          // add option here
-          icon: const Icon(Icons.account_circle_outlined),
-          ),
+          IconButton( icon: const Icon(Icons.more_vert), onPressed: () {},)
+        
         ],
-      ),
-
-      // Componentizar!
-      body: SingleChildScrollView(
-        primary: false,
-        //physics: const NeverScrollableScrollPhysics(),
-        child: Container(
-          padding: EdgeInsets.only(top:25,),
-          child: Column(
-            children: <Widget>[
-              Row(
-                //options to use here: Sizedbox, crossAxisAlignment
-                
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  //proft
-                  Column(
-                    children: <Widget>[
-                      // Icon(Icons.keyboard_double_arrow_up_sharp), // alternativa
-                      Icon(Icons.arrow_downward),
-                    ],
-                  ),
-                  // balance
-                  Column(
-                    children: <Widget>[
-                      Icon(Icons.currency_exchange_sharp),
-
-                    ],
-                  ),
-                  // spent
-                  Column(
-                    children: <Widget>[
-                      // Icon(Icons.keyboard_double_arrow_up_sharp), alternativa
-                      Icon(Icons.arrow_upward),
-
-                    ],
-                  ),
-                ], 
-              ),
-              
-              Divider(indent: 15, endIndent: 15, height: 35,),
-              // Slide month
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                    IconButton(onPressed: (){}, icon: Icon(Icons.keyboard_arrow_left)),
-                    Text(_currMonth,
-                      style: TextStyle(
-                        fontStyle: FontStyle.italic,
-                        fontSize: 12,
-                      ),
-                    ),
-                    IconButton(onPressed: (){}, icon: Icon(Icons.keyboard_arrow_right)),
-                  // Text(_curretMonth,),
-                ],
-              ),
-              
-              Divider(indent: 15, endIndent: 15, height: 35,),
-              // Transactions
-              Text('ue?'),
-              Row(
-                //widget data table
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text('Lançamentos'),
-                      IconButton(onPressed: (){}, icon: Icon(Icons.filter_list)),
-                    ],
-                  ),
-                ],
-                //options to use here: Listview
-
-
-              ),
-            ],
-          ),
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: <Widget> [
+            Tab(icon: Icon(Icons.currency_exchange_rounded)),
+            Tab(icon: Icon(Icons.stacked_bar_chart, size: 32.0)),
+          ],
         ),
       ),
-      
-      // add regiter
-      floatingActionButton: FloatingActionButton(
-        
-        child: const Icon(Icons.add), // cuidado com esse const!
-        onPressed: (){},
+
+      body: Column(
+          children: <Widget>[
+            //Componentizar os containers! 1 Widget pra cada divisão
+            //header
+            Container (
+            padding: EdgeInsets.only(left: 10, right: 10, bottom: 10, top:40,),
+            //@TODO Convert to card ?
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                //proft
+                Column(
+                  children: <Widget>[
+                    // Icon(Icons.keyboard_double_arrow_up_sharp), // alternativa
+                    Icon(Icons.arrow_downward),
+                  ],
+                ),
+                // balance
+                Column(
+                  children: <Widget>[
+                    Icon(Icons.currency_exchange_sharp),
+
+                  ],
+                ),
+                // spent
+                Column(
+                  children: <Widget>[
+                    // Icon(Icons.keyboard_double_arrow_up_sharp), alternativa
+                    Icon(Icons.arrow_upward),
+
+                  ],
+                ),
+              ],
+            ),
+          ),
+          
+          Divider(indent: 15, endIndent: 15,),
+          // Data slider
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              IconButton(onPressed: (){}, icon: Icon(Icons.keyboard_arrow_left)),
+              Text(_currMonth,
+                style: TextStyle(
+                  fontStyle: FontStyle.italic,
+                  fontSize: 12,
+                ),
+              ),
+              IconButton(onPressed: (){}, icon: Icon(Icons.keyboard_arrow_right)),
+            ],
+          ),
+          Divider(indent: 15, endIndent: 15, height: 15,),
+          // Records by month
+          
+          ListView.builder(
+            // shrinkWrap: true,
+            itemCount: _mockData.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Expanded(
+                child: Column(children: [
+                  Text("item $index"),Text("item $index"),Text("item $index"),Text("item $index")
+                ]),
+              );
+            },            
+          ),
+          
+          // ListView.builder(
+          //   shrinkWrap: true,
+          //   itemCount: _mockData.length,
+          //   itemBuilder: (BuildContext context, int index) {
+          //     return Expanded(
+          //       child: Column(children: [
+          //         Text("item $index"),Text("item $index"),Text("item $index"),Text("item $index")
+          //       ]),
+          //     );
+          //   },            
+          // ),
+          // Row(
+          //   children: <Widget>[
+
+          //   ],
+          // )
+
+
+        ],
       ),
 
-      // bottom navigation
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _bottomNavId,
-        // fixedColor: Colors.teal,
-        items: [
-          BottomNavigationBarItem(label: 'recetias/despesas', icon: Icon(Icons.currency_exchange_rounded),),
-          BottomNavigationBarItem(label: 'investimentos', icon: Icon(Icons.data_exploration_outlined),)
-          // Alternataive icons
-          // BottomNavigationBarItem(label: 'investimentos', icon: Icon(Icons.bar_chart_rounded),)          
-          // BottomNavigationBarItem(label: '', icon: Icon(Icons.add_circle_outline_sharp),),
-          // BottomNavigationBarItem(label: '', icon: Icon(Icons.home),),
-          // BottomNavigationBarItem(label: '', icon: Icon(Icons.remove_circle_outline_sharp),),
-        ],
-        onTap: (int index) {
-          setState((){
-            _bottomNavId = index;
-          });
-        },
+      // ref: https://stackoverflow.com/questions/59455684/how-to-make-bottomnavigationbar-notch-transparent
+      //FAB add register
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add), // cuidado com esse const!
+        onPressed: (){},
+
+      ),       
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      //Bottom bar
+      bottomNavigationBar: BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        notchMargin: 4,
+        color: Theme.of(context).primaryColor,
+        child: Container(height: 40,)
+
       ),
+
     );
+
+  
   }
 }
