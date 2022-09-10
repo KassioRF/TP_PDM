@@ -21,8 +21,7 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
   
   final String _currMonth = 'Setembro de 2022';
   late TabController _tabController;
-  int _bottomNavId = 0;
-  List<Record> _mockData = DUMMY_RECORDS;
+  final List<Record> _mockData = DUMMY_RECORDS;
   
   @override
   void initState(){
@@ -35,10 +34,12 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 60,
-        leading: IconButton( icon: Icon(Icons.account_circle, size:40), onPressed: () {},),
+        //@TODO ADD BTN EVENT
+        leading: IconButton(onPressed: () {}, icon: Icon(Icons.account_circle, size:40),),
         title: Text('Hello, User'),
         actions: [
-          IconButton( icon: const Icon(Icons.more_vert), onPressed: () {},)
+          //@TODO ADD BTN EVENT
+          IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert),)
         
         ],
         bottom: TabBar(
@@ -50,97 +51,108 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
         ),
       ),
 
-      body: Column(
+      body: Padding(
+        padding: EdgeInsets.all(12.0),
+        child: Column(
           children: <Widget>[
-            //Componentizar os containers! 1 Widget pra cada divisão
-            //header
-            Container (
-            padding: EdgeInsets.only(left: 10, right: 10, bottom: 10, top:40,),
-            //@TODO Convert to card ?
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                //proft
-                Column(
-                  children: <Widget>[
-                    // Icon(Icons.keyboard_double_arrow_up_sharp), // alternativa
-                    Icon(Icons.arrow_downward),
-                  ],
-                ),
-                // balance
-                Column(
-                  children: <Widget>[
-                    Icon(Icons.currency_exchange_sharp),
+            Expanded(
+              flex:2,
+              //Componentizar os containers! 1 Widget pra cada divisão
+              //header
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  //proft
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      // Icon(Icons.keyboard_double_arrow_up_sharp), // alternativa
+                      Icon(Icons.arrow_downward),
+                    ],
+                  ),
+                  // balance
+                  Column(
+                    children: <Widget>[
+                      Icon(Icons.currency_exchange_sharp),
 
-                  ],
-                ),
-                // spent
-                Column(
-                  children: <Widget>[
-                    // Icon(Icons.keyboard_double_arrow_up_sharp), alternativa
-                    Icon(Icons.arrow_upward),
+                    ],
+                  ),
+                  // spent
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      // Icon(Icons.keyboard_double_arrow_up_sharp), alternativa
+                      Icon(Icons.arrow_upward),
 
-                  ],
-                ),
-              ],
-            ),
-          ),
-          
-          Divider(indent: 15, endIndent: 15,),
-          // Data slider
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              IconButton(onPressed: (){}, icon: Icon(Icons.keyboard_arrow_left)),
-              Text(_currMonth,
-                style: TextStyle(
-                  fontStyle: FontStyle.italic,
-                  fontSize: 12,
-                ),
+                    ],
+                  ),
+                ],
               ),
-              IconButton(onPressed: (){}, icon: Icon(Icons.keyboard_arrow_right)),
-            ],
-          ),
-          Divider(indent: 15, endIndent: 15, height: 15,),
-          // Records by month
-          
-          ListView.builder(
-            // shrinkWrap: true,
-            itemCount: _mockData.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Expanded(
-                child: Column(children: [
-                  Text("item $index"),Text("item $index"),Text("item $index"),Text("item $index")
-                ]),
-              );
-            },            
-          ),
-          
-          // ListView.builder(
-          //   shrinkWrap: true,
-          //   itemCount: _mockData.length,
-          //   itemBuilder: (BuildContext context, int index) {
-          //     return Expanded(
-          //       child: Column(children: [
-          //         Text("item $index"),Text("item $index"),Text("item $index"),Text("item $index")
-          //       ]),
-          //     );
-          //   },            
-          // ),
-          // Row(
-          //   children: <Widget>[
+            ),
+              // Data slider
+            Divider(indent: 15, endIndent: 15,),
+            Expanded(
+              flex: 1,
+              child: Row(                
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  //@TODO ADD BTN EVENT
+                  IconButton(onPressed: (){}, icon: Icon(Icons.keyboard_arrow_left)),
+                  Text(_currMonth,
+                    style: TextStyle(
+                      fontStyle: FontStyle.italic,
+                      fontSize: 12,
+                    ),
+                  ),
+                  //@TODO ADD BTN EVENT
+                  IconButton(onPressed: (){}, icon: Icon(Icons.keyboard_arrow_right)),
+                ],
+              ),
+            ),
+            Divider(indent: 15, endIndent: 15, height: 15,),
+            
+            //Records Filters
+            Expanded(
+              flex: 1,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text('Lançamaentos'),
+                  IconButton(
+                    onPressed: (){},                    
+                    //@TODO ADD BTN EVENT
+                    icon: IconButton(onPressed: (){}, icon: Icon(Icons.filter_list),)
+                  )
+                ]
+              ),
+            ),
+            
+            // ListView dentro de Cloumn: https://www.youtube.com/watch?v=Gylc2SiLxmE
+            Divider(indent: 15, endIndent: 15, height: 15,),
+            Expanded(
+              flex: 9,
+              child: ListView.builder(
+                // shrinkWrap: true,
+                itemCount: _mockData.length*3,
+                itemBuilder: (BuildContext context, int index) {
+                  return ListTile(
+                    title: Text('Item $index')
+                    // child: Column(children: [
+                    //   Text("item $index"),Text("item $index"),Text("item $index"),Text("item $index")
+                    // ]),
+                  );
+                },            
+              ),
+            ),
+          ],
 
-          //   ],
-          // )
-
-
-        ],
+        ),
       ),
-
       // ref: https://stackoverflow.com/questions/59455684/how-to-make-bottomnavigationbar-notch-transparent
       //FAB add register
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add), // cuidado com esse const!
+        //@TODO ADD BTN EVENT
         onPressed: (){},
 
       ),       
