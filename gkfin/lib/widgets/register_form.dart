@@ -1,23 +1,22 @@
-
-//@TODO Make an correct widget build
-
 import 'package:flutter/material.dart';
-import '../utils/app_routes.dart';
+// import '../utils/app_routes.dart';
 
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({super.key});
+class RegisterForm extends StatefulWidget {
+  const RegisterForm({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
-  _LoginForm createState() => _LoginForm();
+  _RegisterForm createState() => _RegisterForm();
+
 }
 
-class _LoginForm extends State<LoginForm> {
-  
+class _RegisterForm extends State<RegisterForm> {
+  //@TODO: slider form
   final _formKey = GlobalKey<FormState>();
   bool _isObscure = true;
-  
+
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -25,16 +24,28 @@ class _LoginForm extends State<LoginForm> {
       children: <Widget>[
         // Screen Title                  
         Text(
-          'Bem vindo!',
+          'Cadastro',
           style: Theme.of(context).textTheme.headline1,
         ),
 
-        const SizedBox(height: 45,), // space between elements
+        const SizedBox(height: 20,), // space between elements
         // Form inputs
         Form(
           key: _formKey,
           child: Column(                
-            children: [                        
+            children: [
+              // Name field
+              TextFormField(
+                maxLines: 1,
+                decoration: const InputDecoration(
+                  hintText: 'Seu nome',
+                  fillColor: Colors.white,
+                  filled: true,
+                  prefixIcon: Icon(Icons.account_circle),
+                ),
+              ),
+              const SizedBox(height: 20,), // space between elements                        
+              
               // Email field
               TextFormField(
                 //@TODO Validate email here!
@@ -43,7 +54,8 @@ class _LoginForm extends State<LoginForm> {
                   hintText: 'Email',
                   fillColor: Colors.white,
                   filled: true,
-                  prefixIcon: Icon(Icons.email)
+                  prefixIcon: Icon(Icons.email),
+          
                 ),
               ),
               const SizedBox(height: 20,), // space between elements
@@ -63,37 +75,12 @@ class _LoginForm extends State<LoginForm> {
                       setState(() {
                         _isObscure = !_isObscure;
                       });
-                    },
+                    }, 
                     ),
                 ),
               ),
               // CheckBox Remember me
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  //const Text('Não está cadastrado?',),
-                  TextButton(
-                    onPressed: () {
-                      // @TODO Redirect to register view!
-                      //print('pressed');
-                      //Navigator.pushReplacement(
-                      //  context,
-                      //  MaterialPageRoute(
-                      //    builder: (context) => 
-                      //    //@TODO REMIND PASSWORD 
-                      //    //const RegisterView(title: 'Register UI')
-                      //  ),
-                      //);
-                    },
-                    child: const Text('lembrar senha',),
-                  ),
-                  //const SizedBox(height: 20,), // space between elements
-                ],
-                
-              ),
-
-              
+                      
               const SizedBox(height: 20,), // space between elements
               //SignIn Buttom
               ElevatedButton(
@@ -105,7 +92,7 @@ class _LoginForm extends State<LoginForm> {
                   padding: const EdgeInsets.fromLTRB(40, 15, 40, 15),
                 ),
                 child: const Text(
-                  'Entrar',
+                  'Cadastrar',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
@@ -117,13 +104,14 @@ class _LoginForm extends State<LoginForm> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('Não está cadastrado?',),
+                  const Text('Já possui cadastro?',),
                   TextButton(
                     onPressed: () {
                       // @TODO Redirect to register view!
-                      Navigator.of(context).pushNamed(AppRoutes.REGISTER);
+                      Navigator.of(context).pop();
+
                     },
-                    child: const Text('Cadastre-se',),
+                    child: const Text('Entrar',),
                   ),
                   const SizedBox(height: 60,), // space between elements
                 ],
@@ -135,8 +123,5 @@ class _LoginForm extends State<LoginForm> {
         ),
       ],
     );
-
-  }
-
+  }  
 }
-

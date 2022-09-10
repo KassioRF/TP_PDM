@@ -1,8 +1,13 @@
-
 import 'package:flutter/material.dart';
 
-import 'package:gkfin/views/login.dart';
-//import 'package:gkfin/widgets/login_form.dart';
+import './utils/app_routes.dart';
+
+import 'package:gkfin/views/enter.dart';
+// import 'package:gkfin/views/login.dart';
+// import 'package:gkfin/views/register.dart';
+
+import 'package:gkfin/widgets/login_form.dart';
+import 'package:gkfin/widgets/register_form.dart';
 
 void main() {
   runApp(const MyApp());
@@ -49,7 +54,13 @@ class MyApp extends StatelessWidget {
       // @TODO check if user validation is cached
       // If true: Redirect to main view
       // Else: Redirect to LoginView
-      home: const LoginView(title: 'Login UI',),
+      //home: const LoginView(title: 'Login UI',),
+      initialRoute: '/login',
+      routes: {
+        // AppRoutes.LOGIN: (ctx) => const LoginView(title: 'Login UI'),
+        AppRoutes.LOGIN: (ctx) => EnterView(title: 'Login', form:  LoginForm()),
+        AppRoutes.REGISTER: (ctx) => EnterView(title: 'Register', form: RegisterForm()),
+      },
     
     );
   }
