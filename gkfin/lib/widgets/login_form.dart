@@ -1,4 +1,5 @@
 
+// Referência usada: https://github.com/hawier-dev/flutter-login-ui/blob/main/lib/login_screen.dart
 //@TODO Make an correct widget build
 
 import 'package:flutter/material.dart';
@@ -61,6 +62,7 @@ class _LoginForm extends State<LoginForm> {
                     icon: Icon( _isObscure ? Icons.visibility : Icons.visibility_off),
                     onPressed: () {
                       setState(() {
+                        // https://fluttercorner.com/how-to-show-hide-password-in-textformfield-in-flutter/
                         _isObscure = !_isObscure;
                       });
                     },

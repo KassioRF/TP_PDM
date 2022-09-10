@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 import './utils/app_routes.dart';
 
+import 'package:gkfin/views/home.dart';
 import 'package:gkfin/views/enter.dart';
 // import 'package:gkfin/views/login.dart';
 // import 'package:gkfin/views/register.dart';
 
 import 'package:gkfin/widgets/login_form.dart';
 import 'package:gkfin/widgets/register_form.dart';
-
 void main() {
   runApp(const MyApp());
 }
@@ -55,11 +55,12 @@ class MyApp extends StatelessWidget {
       // If true: Redirect to main view
       // Else: Redirect to LoginView
       //home: const LoginView(title: 'Login UI',),
-      initialRoute: '/login',
+      initialRoute: '/',
       routes: {
         // AppRoutes.LOGIN: (ctx) => const LoginView(title: 'Login UI'),
-        AppRoutes.LOGIN: (ctx) => EnterView(title: 'Login', form:  LoginForm()),
-        AppRoutes.REGISTER: (ctx) => EnterView(title: 'Register', form: RegisterForm()),
+        AppRoutes.HOME: (ctx) => const HomeView(title: 'Home',),
+        AppRoutes.LOGIN: (ctx) => const EnterView(title: 'Login', form:  LoginForm()),
+        AppRoutes.REGISTER: (ctx) => const EnterView(title: 'Register', form: RegisterForm()),
       },
     
     );

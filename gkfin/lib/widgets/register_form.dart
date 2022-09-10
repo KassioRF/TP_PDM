@@ -1,6 +1,5 @@
+// Referência usada: https://github.com/hawier-dev/flutter-login-ui/blob/main/lib/register_screen.dart
 import 'package:flutter/material.dart';
-// import '../utils/app_routes.dart';
-
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({super.key});
