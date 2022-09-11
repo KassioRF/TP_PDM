@@ -23,6 +23,11 @@ final List<Record> DUMMY_RECORDS = [
     desc: 'dummy',
   ),
   Record(
+    type: 'invest',
+    value: 100.0,
+    desc: 'dummy',
+  ),    
+  Record(
     type: 'profit',
     value: 100.0,
     desc: 'dummy',

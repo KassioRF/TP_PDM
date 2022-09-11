@@ -74,7 +74,7 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
         child: Column(
           children: <Widget>[
             Expanded(
-              flex:2,
+              flex:3,
               //Componentizar os containers! 1 Widget pra cada divisão
               //header
               child: Row(
@@ -111,103 +111,79 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
             // Divider(indent: 15, endIndent: 15,),
             Expanded(
               flex: 1,
-              child: Container(                
-                // color: Theme.of(context).backgroundColor,
-                // @TODO Include box decoration
-                decoration: _boxDecoration,
-                child: Row(                
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    //@TODO ADD BTN EVENT
-                    IconButton(onPressed: (){}, icon: Icon(Icons.keyboard_arrow_left)),
-                    Text(_currMonth,
-                      style: TextStyle(
-                        fontStyle: FontStyle.italic,
-                        fontSize: 12,
+              child: Card(
+                // child: Padding(                
+                  // color: Theme.of(context).backgroundColor,
+                  // @TODO Include box decoration
+                  // decoration: _boxDecoration,
+                  child: Row(                
+                    // crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      //@TODO ADD BTN EVENT
+                      IconButton(
+                        padding: EdgeInsets.zero,
+                        onPressed: (){}, 
+                        icon: Icon(Icons.keyboard_arrow_left),
                       ),
-                    ),
-                    //@TODO ADD BTN EVENT
-                    IconButton(onPressed: (){}, icon: Icon(Icons.keyboard_arrow_right)),
-                  ],
-                ),
+                      Text(_currMonth,
+                        style: TextStyle(
+                          fontStyle: FontStyle.italic,
+                          fontSize: 12,
+                        ),
+                      ),
+                      //@TODO ADD BTN EVENT
+                      IconButton(
+                        padding: EdgeInsets.zero,
+                        onPressed: (){},
+                        icon: Icon(Icons.keyboard_arrow_right),
+                      
+                      ),
+                    ],
+                  ),
+                // ),
               ),
             ),
-            // Divider(height: 15,),
             
             //Records Filters
+            // Divider(height: 15,),
             Expanded(
               flex: 1,
         
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  Text('Lançamaentos'),
+                children: <Widget>[                  
+                  Text('Lançamentos'),
                   IconButton(
-                  onPressed: (){},                    
-                  //@TODO ADD BTN EVENT
-                  icon: IconButton(onPressed: (){}, icon: Icon(Icons.filter_list),)
+                    onPressed: (){},                    
+                    //@TODO ADD BTN EVENT
+                    icon: IconButton(
+                      padding: EdgeInsets.only(top: 5.0),
+                      onPressed: (){},
+                      icon: Icon(Icons.filter_list),
+                    )
                   ),
                 ]
               ),
             ),
             
-            // ListView dentro de Cloumn: https://www.youtube.com/watch?v=Gylc2SiLxmE
             Divider(height: 15,),
+            // ListView inside Cloumn:
+            // ref: https://www.youtube.com/watch?v=Gylc2SiLxmE
             Expanded(
-              flex: 8,
-              
+              flex: 7,              
               child: Container(
-                decoration: _boxDecoration,
-               
-                child: ListView.builder(
-                  // shrinkWrap: true,
-                  itemCount: _mockData.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    //@TODO Build an Widget
-                    return SizedBox(
-                        width: width,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            // Text(_mockData[index].type),
-                            // Text(_mockData[index].desc),
-                            // Text('${_mockData[index].value}'),
-                            
-                            Expanded(
-                              flex: 1,
-                              child: Text(_mockData[index].type),
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: Text(_mockData[index].desc),
-                            ),
-                            Expanded(
-                              flex:1,
-                              child: Text('${_mockData[index].value}'),
-                            ),
-                          ],
-                          
-                        ),
-                    );
-                    // return ListTile(
-                    //   title: Text('Item $index')
-                    //   // child: Column(children: [
-                    //   //   Text("item $index"),Text("item $index"),Text("item $index"),Text("item $index")
-                    //   // ]),
-                    
-                    // );
-                  },            
-                ),
-              )
+                decoration: _boxDecoration,               
+                child: showList(),
+              ),
             ),
           ],
 
         ),
       ),
-      // ref: https://stackoverflow.com/questions/59455684/how-to-make-bottomnavigationbar-notch-transparent
       //FAB add register
+      //ref: https://stackoverflow.com/questions/59455684/how-to-make-bottomnavigationbar-notch-transparent
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add), // cuidado com esse const!
         //@TODO ADD BTN EVENT
@@ -225,7 +201,101 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
       ),
 
     );
-
   
   }
+
+  // Delete list item
+  // ref: https://www.youtube.com/watch?v=xaihraUqkcM
+  Widget showList() {
+    return ListView.builder(
+      padding: EdgeInsets.all(5),
+      itemCount: _mockData.length,
+      itemBuilder: (BuildContext context, int index) {
+        return rowItem(context, index);
+      },
+    );
+  }
+
+  Widget rowItem(context, index) {
+    Color color;
+    String value;
+    Icon icon;
+    if (_mockData[index].type == 'spent') {
+      color = Colors.red;
+      value = "- ${_mockData[index].value}";
+      icon = Icon(Icons.arrow_downward, color: color);
+    }else if (_mockData[index].type == 'profit') {
+      color = Theme.of(context).primaryColor;
+      value = "+ ${_mockData[index].value}";
+      icon = Icon(Icons.arrow_upward, color: color);
+    }else {
+      color = Colors.blue;
+      value = "+ ${_mockData[index].value}";
+      icon = Icon(Icons.arrow_upward, color: color);
+    }
+
+    return Dismissible(
+      key: UniqueKey(),
+      onDismissed: (direction) {
+        var data = _mockData[index];
+        showSnackBar(context, data, index);
+        removeRegister(index);
+      },
+      
+      background: deleteBgItem(),
+      child: Card(
+        child: ListTile(
+          leading: icon,
+          title: Text(
+            _mockData[index].desc, 
+            style: TextStyle(color: color),
+          ),
+          trailing: Text(
+            value,
+            style: TextStyle(color: color, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget deleteBgItem() {
+    return Container(
+      alignment: Alignment.centerRight,
+      padding: EdgeInsets.only(right: 20.0),
+      color: Colors.red,
+      child: Icon(Icons.delete, color: Colors.white),
+    );
+  }
+
+  void showSnackBar(context, data, index) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("${_mockData[index].desc} removido"),
+        behavior: SnackBarBehavior.floating,
+        action: SnackBarAction(
+          label: "desfazer",
+
+          onPressed: (){
+            undoDelete(index, data);
+          },
+        ),
+      ),
+    );
+  }
+
+  void undoDelete(index, data) {
+    setState(() {
+      _mockData.insert(index, data);
+    });
+  }
+
+  void removeRegister(index) {
+    setState((){
+      _mockData.removeAt(index);
+    });
+
+
+  }
+
 }
