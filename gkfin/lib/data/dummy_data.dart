@@ -1,4 +1,4 @@
-import '../models/records.dart';
+import '../providers/record.dart';
 
 // ignore: non_constant_identifier_names
 final List<Record> DUMMY_RECORDS = [
