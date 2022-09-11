@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:gkfin/widgets/list_records.dart';
+import 'package:gkfin/widgets/filter_items.dart';
 
 // import '../models/records.dart';
 import '../data/dummy_data.dart';
@@ -152,22 +153,23 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
             Expanded(
               flex: 1,
         
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[                  
-                  Text('Lançamentos'),
-                  IconButton(
-                    onPressed: (){},                    
-                    //@TODO ADD BTN EVENT
-                    icon: IconButton(
-                      padding: EdgeInsets.only(top: 5.0),
-                      onPressed: (){},
-                      icon: Icon(Icons.filter_list),
-                    )
-                  ),
-                ]
-              ),
+              child: FilterItems(),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   crossAxisAlignment: CrossAxisAlignment.end,
+              //   children: <Widget>[                  
+              //     Text('Lançamentos'),
+              //     IconButton(
+              //       onPressed: (){},                    
+              //       //@TODO ADD BTN EVENT
+              //       icon: IconButton(
+              //         padding: EdgeInsets.only(top: 5.0),
+              //         onPressed: (){},
+              //         icon: Icon(Icons.filter_list),
+              //       )
+              //     ),
+              //   ]
+              // ),
             ),
             
             Divider(height: 15,),
@@ -193,13 +195,15 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
         onPressed: (){},
 
       ),       
+      // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       //Bottom bar
       bottomNavigationBar: BottomAppBar(
+        // shape: CircularNotchedRectangle(),
         shape: CircularNotchedRectangle(),
         notchMargin: 4,
         color: Theme.of(context).primaryColor,
-        child: Container(height: 40,)
+        child: Container(height: 37,)
 
       ),
 

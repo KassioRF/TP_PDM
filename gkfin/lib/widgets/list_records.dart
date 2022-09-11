@@ -22,19 +22,28 @@ class ListRecords extends StatefulWidget {
 }
 
 class _ListRecords extends State<ListRecords>{
-  // const _ListRecords({super.key});
-    // show proft only, or spent,  or invest;
-    // final filter, const? enum ?
+  // Records recordsProvider = Records();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // getCurrentFilter();
+  }
+
+  void getCurrentFilter() async {
+    // String activeFilter = recordsProvider.getFilter();
+  }
 
   void refresh(){
     setState(() {});
   }  
 
+
   @override
   Widget build(BuildContext context) {
     // show proft only, or spent,  or invest;
     // final filter, const? enum ?
-    final recordsProvider = Provider.of<Records>(context, listen: false);
+    final recordsProvider = Provider.of<Records>(context);
     final records = recordsProvider.items;
 
     return ListView.builder (
@@ -72,7 +81,7 @@ class _ListRecordsItem extends State<ListRecordsItem> {
 
   // Show snackbar when onDismissed list item
   void showSnackBar(context,index) {
-    Record record = Provider.of<Records>(context, listen: false).items[index];
+    Record record = Provider.of<Records>(context).items[index];
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text("${record.desc} removido"),
@@ -92,7 +101,7 @@ class _ListRecordsItem extends State<ListRecordsItem> {
   Widget build (BuildContext context) {
     // final recordsProvider = Provider.of<Records>(context);
     // final records = recordsProvider.items;
-    final  records = Provider.of<Records>(context,).items;
+    final records = Provider.of<Records>(context,).items;
 
     Color color;
     String value;
