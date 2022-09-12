@@ -83,8 +83,9 @@ class _AddRegister extends State<AddRegister> {
         //   IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert),)        
         // ],
 
-      ),      
+      ),
       
+      //@TODO COMPONENTIZAR O FORM
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

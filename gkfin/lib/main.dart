@@ -1,3 +1,4 @@
+// rodar: flutter run --no-sound-null-safety
 
 // --no-sound-null-safety
 import 'package:flutter/material.dart';
@@ -68,7 +69,7 @@ class MyApp extends StatelessWidget {
         // If true: Redirect to main view
         // Else: Redirect to LoginView
         //home: const LoginView(title: 'Login UI',),
-        initialRoute: '/about',
+        initialRoute: '/login',
         routes: {
           // AppRoutes.LOGIN: (ctx) => const LoginView(title: 'Login UI'),
           // AppRoutes.HOME: (ctx) => _isLogedIn ? HomeView(title: 'Home',) : EnterView(title: 'Login', form:  LoginForm()),
