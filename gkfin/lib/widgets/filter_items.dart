@@ -15,103 +15,61 @@ class FilterItems extends StatefulWidget {
 
 class _FilterItems extends State<FilterItems>{
 
-
-
-
-  // int _activeFilter = 0;
-  
-  // Dialog with stateful widgets
-  // Ref: https://www.youtube.com/watch?v=Fd5ZlOxyZJ4
-  // void onChangeRadioValue(int newVal) {
-  //   //update Home context by Provider Records
-  //   setState((){
-  //   _activeFilter = newVal;
-  //   });
-  // }
-  // Future<void> showDialogFilter(BuildContext context) async {
-  //   return await showDialog(context: context,
-  //     builder:(context) {
-  //       return AlertDialog(
-  //         content: Column(
-  //           Radio(value: 0, groupValue: _activeFilter, onChanged: onChangeRadioValue),
-  //           Radio(value: 1, groupValue: _activeFilter, onChanged: onChangeRadioValue),
-  //           Radio(value: 2, groupValue: _activeFilter, onChanged: onChangeRadioValue),
-  //           Radio(value: 3, groupValue: _activeFilter, onChanged: onChangeRadioValue),            
-  //         ),
-  //         actions: <Widget> [
-  //           IconButton(
-  //             icon: const Icon(Icons.check_sharp),
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-              
-  //           ),
-  //         ]
-  //       );
-  //     }
-  //   );
-  // }
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  // void onChangeRadioValue(int newVal) {
-  //   //update Home context by Provider Records
-  //   setState((){
-  //   _activeFilter = newVal;
-  //   });
-  // }
   
   showDialogFilter(BuildContext context) {
     return  showDialog(context: context,
     builder: (context){
-      String activeFilter = Provider.of<Records>(context,).getFilter();
+      
       return StatefulBuilder(builder: (context,setState){
+        String activeFilter = Provider.of<Records>(context).getFilter();
         return AlertDialog(
           content: Form(
             key: _formKey,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Radio(value: Filter.ALL, groupValue: activeFilter, onChanged: (value){
-                  // onChangeRadioValue;
-                  setState((){
-                   activeFilter = value!;
-                   Provider.of<Records>(context, listen: false).setFilter(activeFilter);
-                  //  print(activeFilter);
-
-                  });
-                }),
-                Radio(value: Filter.PROFIT, groupValue: activeFilter, onChanged: (value){
-                  setState((){
-                   activeFilter = value!; 
-                   Provider.of<Records>(context, listen: false).setFilter(activeFilter);
-                  //  print(activeFilter);
-                  });
-                }),
-                Radio(value: Filter.SPENT, groupValue: activeFilter, onChanged: (value){
-                  setState((){
-                   activeFilter = value!; 
-                   Provider.of<Records>(context, listen: false).setFilter(activeFilter);
-                  //  print(activeFilter);
-                  });
-                }),
-                Radio(value: Filter.INVEST, groupValue: activeFilter, onChanged: (value){
-                  setState((){
-                   activeFilter = value!; 
-                   Provider.of<Records>(context, listen: false).setFilter(activeFilter);
-                  //  print(activeFilter);
-                  });
-                }),                                      
+                RadioListTile(
+                  title: const Text('todos'),
+                  value: Filter.ALL, 
+                  groupValue: activeFilter, 
+                  onChanged: (value){
+                    Provider.of<Records>(context, listen: false).setFilter(value!);
+                  },                  
+                ),
+                RadioListTile(
+                  title: const Text('receitas'),
+                  value: Filter.PROFIT, 
+                  groupValue: activeFilter, 
+                  onChanged: (value){
+                    Provider.of<Records>(context, listen: false).setFilter(value!);
+                  },                  
+                  
+                ),
+                RadioListTile(
+                  title: const Text('despesas'),
+                  value: Filter.SPENT, 
+                  groupValue: activeFilter, 
+                  onChanged: (value){
+                    Provider.of<Records>(context, listen: false).setFilter(value!);
+                  },                                    
+                ),
+                RadioListTile(
+                  title: const Text('investimentos'),
+                  value: Filter.INVEST, 
+                  groupValue: activeFilter, 
+                  onChanged: (value){
+                    Provider.of<Records>(context, listen: false).setFilter(value!);
+                  },                  
+                ),                                
+                             
               ],
             )
           ),
           actions: <Widget>[
-            TextButton(
-              child: Text('Okay'),
-              onPressed: (){
-
-                  Navigator.of(context).pop(true);
-
-              },
+              IconButton(onPressed: (){ Navigator.of(context).pop(true); },
+              icon: const Icon(Icons.check_sharp),
+              // Navigator.of(context).pop(true);
             ),
           ],
         );
@@ -137,13 +95,6 @@ class _FilterItems extends State<FilterItems>{
           color: Colors.black54,
           ),
         ),
-        // Column(
-        //   children: <Widget> [
-        //     Radio(value: 0, groupValue: _activeFilter, onChanged: onChangeRadioValue),
-        //     Radio(value: 1, groupValue: _activeFilter, onChanged: onChangeRadioValue),
-        //     Radio(value: 2, groupValue: _activeFilter, onChanged: onChangeRadioValue),
-        //     Radio(value: 3, groupValue: _activeFilter, onChanged: onChangeRadioValue),]
-        //   ),
       ],
 
     );      

@@ -8,8 +8,6 @@ import 'package:provider/provider.dart';
 import '../providers/records.dart';
 import '../providers/record.dart';
 
-
-
 // default box decoration 
 
 
@@ -25,63 +23,38 @@ class _ListRecords extends State<ListRecords>{
   // Records recordsProvider = Records();
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    // getCurrentFilter();
   }
 
-  void getCurrentFilter() async {
-    // String activeFilter = recordsProvider.getFilter();
-  }
 
   void refresh(){
     setState(() {});
   }  
 
-
   @override
   Widget build(BuildContext context) {
-    // show proft only, or spent,  or invest;
-    // final filter, const? enum ?
-    final recordsProvider = Provider.of<Records>(context);
-    final records = recordsProvider.items;
-
-    return ListView.builder (
-      padding: EdgeInsets.all(5.0),
-      itemCount: records.length,
-      itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
-        value: records[i],
-        child: ListRecordsItem(index: i, refresh: refresh),
-      ),
+    return Consumer<Records>(
+      builder: (ctx, records, child) {
+        return ListView.builder(
+          itemCount: records.items.length,
+          itemBuilder: (ctx, i) => ListRecordsItem(index: i, record: records.items[i] ,refresh: refresh),
+        );
+      },
     );
   }
-
-
 }
-
 
 // ignore: must_be_immutable
-class ListRecordsItem extends StatefulWidget {
-  // const ListRecordsItem ({super.key,required this.index});
+class ListRecordsItem extends StatelessWidget {
   final int index;
+  final Record record;
   VoidCallback refresh;
+  
+  ListRecordsItem ({ Key? key, required this.index, required this.record, required this.refresh, } ): super(key:key);
 
-  ListRecordsItem ({ Key? key, required this.index, required this.refresh} ): super(key:key);
-  @override
-  // ignore: library_private_types_in_public_api
-  _ListRecordsItem createState() => _ListRecordsItem();
-
-}
-
-class _ListRecordsItem extends State<ListRecordsItem> {
-  @override
-  void initState() {
-    super.initState();
-  }
 
   // Show snackbar when onDismissed list item
-  void showSnackBar(context,index) {
-    Record record = Provider.of<Records>(context).items[index];
+  void showSnackBar(context,id) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text("${record.desc} removido"),
@@ -90,56 +63,59 @@ class _ListRecordsItem extends State<ListRecordsItem> {
           label: "desfazer",
 
           onPressed: (){
-            Provider.of<Records>(context, listen: false).undoDelete(index, record);
+            Provider.of<Records>(context, listen: false).undoDelete(id, record);
           },
         ),
       ),
+    );
+
+  }
+
+  Widget deleteBgItem() {
+    return Container(
+      alignment: Alignment.centerRight,
+      padding: EdgeInsets.only(right: 20.0),
+      color: Colors.red,
+      child: Icon(Icons.delete, color: Colors.white),
     );
   }
 
   @override
   Widget build (BuildContext context) {
-    // final recordsProvider = Provider.of<Records>(context);
-    // final records = recordsProvider.items;
-    final records = Provider.of<Records>(context,).items;
-
     Color color;
     String value;
     Icon icon;
 
-    if (records[widget.index].type == 'spent') {
+    if (record.type == 'spent') {
       color = Colors.red;
-      value = "- ${records[widget.index].value}";
+      value = "- ${record.value}";
       icon = Icon(Icons.arrow_downward, color: color);
     
-    }else if (records[widget.index].type == 'profit') {
+    }else if (record.type == 'profit') {
       color = Theme.of(context).primaryColor;
-      value = "+ ${records[widget.index].value}";
+      value = "+ ${record.value}";
       icon = Icon(Icons.arrow_upward, color: color);
     
     }else {
       color = Colors.blue;
-      value = "+ ${records[widget.index].value}";
+      value = "+ ${record.value}";
       icon = Icon(Icons.arrow_upward, color: color);
     }
 
 
     return Dismissible(
-      key:  UniqueKey(),
-      onDismissed: (direction) {
-        showSnackBar(context, widget.index);
-        setState((){
-        Provider.of<Records>(context, listen: false).removeRecord(widget.index);
-        // refresh to prevent index error when record list it's updated
-        // ref: https://stackoverflow.com/questions/62011871/flutter-index-out-of-range-when-i-try-to-delete-an-item-from-a-list
-        widget.refresh();
-        });
+      key: ValueKey(record.id),
+      background: deleteBgItem(),
+      // key:  UniqueKey(),
+      onDismissed: (_) {
+        showSnackBar(context, record.id);
+        Provider.of<Records>(context, listen: false).removeRecord(record.id);
       },
       child: Card (
         child: ListTile(
           leading: icon,
           title: Text(
-            records[widget.index].desc,
+            record.desc,
             style: TextStyle(color: color),
           ),
           trailing: Text(
@@ -147,11 +123,7 @@ class _ListRecordsItem extends State<ListRecordsItem> {
             style: TextStyle(color: color, fontWeight: FontWeight.bold),
           ),
         ),
-      ),
-      
+      ),      
     );
-
   } 
-
-  
 }

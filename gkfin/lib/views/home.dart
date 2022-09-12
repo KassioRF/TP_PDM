@@ -33,7 +33,7 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
-  
+
   final String _currMonth = 'Setembro de 2022';
   late TabController _tabController;
   final List _mockData = DUMMY_RECORDS;
@@ -43,6 +43,7 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
   void initState(){
     super.initState();
     _tabController = TabController(vsync: this, length: 2);
+    // _tabController = TabController(vsync: this, length: 2);
   }
   // ignore: empty_constructor_bodies
   @override
@@ -148,28 +149,11 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
               ),
             ),
             
-            //Records Filters
-            // Divider(height: 15,),
+            // Records Filters
+            Divider(height: 15,),
             Expanded(
-              flex: 1,
-        
+              flex: 1,        
               child: FilterItems(),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   crossAxisAlignment: CrossAxisAlignment.end,
-              //   children: <Widget>[                  
-              //     Text('Lançamentos'),
-              //     IconButton(
-              //       onPressed: (){},                    
-              //       //@TODO ADD BTN EVENT
-              //       icon: IconButton(
-              //         padding: EdgeInsets.only(top: 5.0),
-              //         onPressed: (){},
-              //         icon: Icon(Icons.filter_list),
-              //       )
-              //     ),
-              //   ]
-              // ),
             ),
             
             Divider(height: 15,),
@@ -178,6 +162,7 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
             Expanded(
               flex: 7,              
               child: Container(
+                padding: EdgeInsets.all(5.0),
                 decoration: _boxDecoration,               
                 child: ListRecords(),
                 // child: showList(),

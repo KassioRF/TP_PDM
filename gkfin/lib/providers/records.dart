@@ -28,8 +28,9 @@ class Records with ChangeNotifier {
     notifyListeners();
   }
 
-  void removeRecord(int index) {
-    _items.removeAt(index);
+  void  removeRecord(int id) {
+    // _items.removeAt(index);
+    _items.removeWhere((element) => element.id == id);
     notifyListeners();
   }
 
