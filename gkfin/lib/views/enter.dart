@@ -49,6 +49,10 @@ class EnterView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // double width = MediaQuery.of(context).size.width;
+    // double height = MediaQuery.of(context).size.height;
+    // width = width - width*.05;
+    // height = height - height*.50;
     return Scaffold(
       // Defines background color as primary color of MyApp ThemeData
       //backgroundColor: Theme.of(context).primaryColor,
@@ -56,21 +60,21 @@ class EnterView extends StatelessWidget {
       //prevent resize when keyboard shows up
       resizeToAvoidBottomInset: false,
       
-      body: Stack(
-
+      body: Column(
         // ClipPathBg(),
         children: <Widget>[
-        const ClipPathBg(waveDeep: 0, waveDeep2: 50, bottom: 450, opacity: .8, height: 180,),
-        const ClipPathBg(waveDeep: 15, waveDeep2: 25, bottom: 50, opacity: .3, height: 175,),
-
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(45),
-              child: form,
-
-              
-            ),
+          Stack(
+            children: const <Widget>[
+              ClipPathBg(waveDeep: 15, waveDeep2: 25, bottom: 50, opacity: .3, height: 175,),
+              ClipPathBg(waveDeep: 0, waveDeep2: 50, bottom: 450, opacity: .8, height: 180,),
+            ],
+          ),
+          Container(
+            // alignment: Alignment.center,
+            padding: const EdgeInsets.only(left:45.0, right:45.0, bottom:0, top: 15 ),
+            child:form,
+          // Padding(
+            // ),
           ),
         ],
       ),

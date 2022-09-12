@@ -22,9 +22,9 @@ class _RegisterForm extends State<RegisterForm> {
       // Childrens
       children: <Widget>[
         // Screen Title                  
-        Text(
+        const Text(
           'Cadastro',
-          style: Theme.of(context).textTheme.headline1,
+          style: TextStyle(fontSize: 18.0),
         ),
 
         const SizedBox(height: 20,), // space between elements
@@ -43,7 +43,7 @@ class _RegisterForm extends State<RegisterForm> {
                   prefixIcon: Icon(Icons.account_circle),
                 ),
               ),
-              const SizedBox(height: 20,), // space between elements                        
+              const SizedBox(height: 10,), // space between elements                        
               
               // Email field
               TextFormField(
@@ -57,7 +57,7 @@ class _RegisterForm extends State<RegisterForm> {
           
                 ),
               ),
-              const SizedBox(height: 20,), // space between elements
+              const SizedBox(height: 10,), // space between elements
               // Password Field
               TextFormField(
                 //@TODO Validate password here!
@@ -80,7 +80,7 @@ class _RegisterForm extends State<RegisterForm> {
               ),
               // CheckBox Remember me
                       
-              const SizedBox(height: 20,), // space between elements
+              const SizedBox(height: 10,), // space between elements
               //SignIn Buttom
               ElevatedButton(
                 onPressed: () {

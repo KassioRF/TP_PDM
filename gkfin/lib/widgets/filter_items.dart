@@ -49,8 +49,8 @@ class _FilterItems extends State<FilterItems>{
                 RadioListTile(
                   title: const Text('despesas'),
                   value: Filter.SPENT, 
-                  groupValue: activeFilter, 
-                  onChanged: (value){
+                  groupValue: activeFilter,                   
+                  onChanged: (value){                  
                     Provider.of<Records>(context, listen: false).setFilter(value!);
                   },                                    
                 ),
@@ -61,7 +61,7 @@ class _FilterItems extends State<FilterItems>{
                   onChanged: (value){
                     Provider.of<Records>(context, listen: false).setFilter(value!);
                   },                  
-                ),                                
+                ),
                              
               ],
             )
