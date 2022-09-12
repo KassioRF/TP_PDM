@@ -161,7 +161,7 @@ class _AddRegister extends State<AddRegister> {
                       //@TODO Validate email here!
                       maxLines: 1,
                       decoration: const InputDecoration(
-                        hintText: 'descrição',
+                        hintText: 'descrição *',
                         icon: Icon(Icons.info),
                       ),
                     ),                  
@@ -170,7 +170,7 @@ class _AddRegister extends State<AddRegister> {
                       controller: dateinput, //editing controller of this TextField
                       decoration: const InputDecoration( 
                         icon: Icon(Icons.calendar_today), //icon of text field
-                        labelText: "Enter Date" //label text of field
+                        labelText: "data *" //label text of field
                       ),
                       readOnly: true,  //set it true, so that user will not able to edit text
                       onTap: () async {
@@ -194,14 +194,11 @@ class _AddRegister extends State<AddRegister> {
                             print("Date is not selected");
                         }
                       },
-                    ),                  
-                  
-                  ],                                                      
+                    ),                
+                  ],
                 ),
               ),  
-
             ),
-          
           ],
         )
       ),

@@ -8,11 +8,11 @@ import 'package:gkfin/widgets/list_records.dart';
 import 'package:gkfin/widgets/filter_items.dart';
 import 'package:gkfin/widgets/pick_date.dart';
 import 'package:gkfin/views/add_register.dart';
+import '../utils/app_routes.dart';
 
 // import '../models/records.dart';
 // import '../models/records.dart';
 import '../data/dummy_data.dart';
-import '../utils/app_routes.dart';
 
 // default box decoration 
 final _boxDecoration =  BoxDecoration(
@@ -57,9 +57,14 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
 
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 60,
+        toolbarHeight: 45,
         //@TODO ADD BTN EVENT
-        leading: IconButton(onPressed: () {}, icon: Icon(Icons.account_circle, size:40),),
+        leading: IconButton(onPressed: () {
+            Navigator.of(context).pushNamed(AppRoutes.PROFILE);
+          },
+          icon: Icon(Icons.account_circle, size:40),
+        ),
+
         title: Text('Hello, User'),
         actions: [
           //@TODO ADD BTN EVENT
@@ -69,7 +74,7 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
               if (value == 0) {
                 Navigator.of(context).pushNamed(AppRoutes.ABOUT);
               }else if (value == 1) {
-                Navigator.of(context).pushNamed(AppRoutes.LOGIN);
+                Navigator.of(context).pushNamed(AppRoutes.SPLASH);
               }
             },
             itemBuilder: (ctx) => [            

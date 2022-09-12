@@ -33,7 +33,7 @@ class AboutView extends StatelessWidget {
               padding: const EdgeInsets.all(15),
               child: Column(
                 children: const <Widget>[
-                  Text(' GK Finançãs é a sua solução portátil para facilitar a organização e controle de suas finanças pessoais!'),
+                  Text(' GK Finanças é a sua solução portátil para facilitar a organização e controle de suas finanças pessoais!'),
                   // const SizedBox(height: 5,),                  
                   Divider(height: 45,),
                   Text('Desenvolvido por: '),

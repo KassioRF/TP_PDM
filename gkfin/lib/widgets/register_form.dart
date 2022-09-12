@@ -75,7 +75,7 @@ class _RegisterForm extends State<RegisterForm> {
                         _isObscure = !_isObscure;
                       });
                     }, 
-                    ),
+                  ),
                 ),
               ),
               // CheckBox Remember me

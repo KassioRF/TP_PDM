@@ -97,8 +97,9 @@ class ListRecordsItem extends StatelessWidget {
       icon = Icon(Icons.arrow_upward, color: color);
     
     }else {
-      color = Colors.blue;
-      value = "+ ${record.value}";
+      // color = Colors.blue;
+      color = Colors.deepPurple;
+      value = "${record.value}";
       icon = Icon(Icons.arrow_upward, color: color);
     }
 

@@ -8,6 +8,7 @@ class AppRoutes {
   static const LOGIN = '/login';
   static const REGISTER = '/register';
   static const RECOVERYPASS = '/recoverpass';
+  static const PROFILE = '/profile';
   static const ADDREGISTER = '/addregister';
   static const ABOUT = '/about';
 
