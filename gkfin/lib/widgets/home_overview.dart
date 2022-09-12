@@ -39,7 +39,7 @@ class _HomeOverView extends State<HomeOverView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             // Icon(Icons.keyboard_double_arrow_up_sharp), // alternativa
-            Text('Receitas', ),
+            const Text('Receitas', style: TextStyle(fontSize: 13)),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
@@ -54,7 +54,7 @@ class _HomeOverView extends State<HomeOverView> {
                     ),
                   ),
                 ),
-            const Icon(Icons.arrow_upward, color: Colors.green),
+            const Icon(Icons.arrow_upward, color: Colors.green, size: 22,),
               ],
             ),
 
@@ -65,8 +65,8 @@ class _HomeOverView extends State<HomeOverView> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Container(
-              padding: EdgeInsets.only(top:10),
-              child: Text('Saldo',  ),
+              padding: const  EdgeInsets.only(top:10),
+              child: const  Text('Saldo', style: TextStyle(fontSize: 13) ),
 
             ),
             
@@ -83,9 +83,7 @@ class _HomeOverView extends State<HomeOverView> {
                     ),
                   ),
                 ),
-                Container(
-                  child: Icon(Icons.currency_exchange_sharp, color: Colors.blue,size: 16,),
-                ),
+                const Icon(Icons.currency_exchange_sharp, color: Colors.blue, size: 16,),
                 
               ],
             ),
@@ -98,10 +96,10 @@ class _HomeOverView extends State<HomeOverView> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
             // Icon(Icons.keyboard_double_arrow_up_sharp), alternativa
-            Text('Despesas', ),
+            Text('Despesas', style: TextStyle(fontSize: 13) ),
             Row(
               children: <Widget>[
-                const Icon(Icons.arrow_downward, color: Colors.redAccent),
+                const Icon(Icons.arrow_downward, color: Colors.redAccent, size: 22,),
                 Container(
                   padding: const EdgeInsets.fromLTRB(5, 10, 5, 5),
                   decoration: _boxDecoration,

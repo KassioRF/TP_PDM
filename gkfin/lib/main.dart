@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.green,
           backgroundColor: Colors.white,
-          fontFamily: 'Lato',
+          fontFamily: 'Open Sans',
           // fontFamily: GoogleFon,
 
           // Tex Styling for Headlines, titles, bodies, and more...
