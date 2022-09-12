@@ -1,12 +1,5 @@
 import 'package:flutter/material.dart';
 
-
-
-
-
-
-
-
 // default box decoration 
 final _boxDecoration =  BoxDecoration(
   borderRadius: BorderRadius.circular(10),

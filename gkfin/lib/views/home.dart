@@ -7,7 +7,7 @@ import 'package:gkfin/widgets/home_overview.dart';
 import 'package:gkfin/widgets/list_records.dart';
 import 'package:gkfin/widgets/filter_items.dart';
 import 'package:gkfin/widgets/pick_date.dart';
-import 'package:gkfin/widgets/add_register.dart';
+import 'package:gkfin/views/add_register.dart';
 
 // import '../models/records.dart';
 import '../data/dummy_data.dart';
@@ -82,7 +82,7 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
         child: Column(
           children: <Widget>[
             Expanded(
-              flex:3,
+              flex:4,
               //Componentizar os containers! 1 Widget pra cada divisão
               //header
               child: HomeOverView(),
@@ -107,7 +107,7 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
             // ListView inside Cloumn:
             // ref: https://www.youtube.com/watch?v=Gylc2SiLxmE
             Expanded(
-              flex: 7,              
+              flex: 6,              
               child: Container(
                 padding: EdgeInsets.all(5.0),
                 decoration: _boxDecoration,               
@@ -124,7 +124,9 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add), // cuidado com esse const!
         //@TODO ADD BTN EVENT
-        onPressed: (){},
+        onPressed: (){
+          Navigator.of(context).push(_addRegister());
+        },
 
       ),
       // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
@@ -143,4 +145,22 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
   
   }
 
+}
+
+Route _addRegister() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => const AddRegister(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(0.0, 1.0);
+      const end = Offset.zero;
+      const curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
 }

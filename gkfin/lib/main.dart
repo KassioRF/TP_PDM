@@ -12,6 +12,7 @@ import 'package:gkfin/providers/records.dart';
 
 import 'package:gkfin/views/home.dart';
 import 'package:gkfin/views/enter.dart';
+import 'package:gkfin/views/add_register.dart';
 
 import 'package:gkfin/widgets/splash.dart';
 import 'package:gkfin/widgets/login_form.dart';
@@ -60,7 +61,7 @@ class MyApp extends StatelessWidget {
         // If true: Redirect to main view
         // Else: Redirect to LoginView
         //home: const LoginView(title: 'Login UI',),
-        initialRoute: '/',
+        initialRoute: '/addregister',
         routes: {
           // AppRoutes.LOGIN: (ctx) => const LoginView(title: 'Login UI'),
           // AppRoutes.HOME: (ctx) => _isLogedIn ? HomeView(title: 'Home',) : EnterView(title: 'Login', form:  LoginForm()),
@@ -69,10 +70,9 @@ class MyApp extends StatelessWidget {
           AppRoutes.LOGIN: (ctx) => const EnterView(title: 'Login', form:  LoginForm()),
           AppRoutes.REGISTER: (ctx) => const EnterView(title: 'Register', form: RegisterForm()),
           AppRoutes.RECOVERYPASS: (ctx) => const EnterView(title: 'Recover pass', form:RecoveryForm()),
+          AppRoutes.ADDREGISTER: (ctx) => const AddRegister(),
         },
       ),
-
-
     );
 
 
