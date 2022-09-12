@@ -59,7 +59,7 @@ class _LoginForm extends State<LoginForm> {
                   fillColor: Colors.white,
                   filled: true,
                   suffixIcon: IconButton(
-                    icon: Icon( _isObscure ? Icons.visibility : Icons.visibility_off),
+                    icon: Icon( _isObscure ? Icons.visibility_off : Icons.visibility),
                     onPressed: () {
                       setState(() {
                         // https://fluttercorner.com/how-to-show-hide-password-in-textformfield-in-flutter/

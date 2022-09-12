@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gkfin/assets/bg_clipper.dart';
+import 'package:gkfin/widgets/bg_clipper.dart';
 
 // ignore: must_be_immutable
 class ClipPathBg extends StatelessWidget {

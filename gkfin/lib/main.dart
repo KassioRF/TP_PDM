@@ -13,6 +13,7 @@ import 'package:gkfin/providers/records.dart';
 import 'package:gkfin/views/home.dart';
 import 'package:gkfin/views/enter.dart';
 
+import 'package:gkfin/widgets/splash.dart';
 import 'package:gkfin/widgets/login_form.dart';
 import 'package:gkfin/widgets/register_form.dart';
 import 'package:gkfin/widgets/recover_password.dart';
@@ -27,6 +28,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
+    bool _isLogedIn = false;
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -56,9 +60,11 @@ class MyApp extends StatelessWidget {
         // If true: Redirect to main view
         // Else: Redirect to LoginView
         //home: const LoginView(title: 'Login UI',),
-        initialRoute: '/recoverpass',
+        initialRoute: '/',
         routes: {
           // AppRoutes.LOGIN: (ctx) => const LoginView(title: 'Login UI'),
+          // AppRoutes.HOME: (ctx) => _isLogedIn ? HomeView(title: 'Home',) : EnterView(title: 'Login', form:  LoginForm()),
+          AppRoutes.SPLASH: (ctx) => const Splash(),
           AppRoutes.HOME: (ctx) => const HomeView(title: 'Home',),
           AppRoutes.LOGIN: (ctx) => const EnterView(title: 'Login', form:  LoginForm()),
           AppRoutes.REGISTER: (ctx) => const EnterView(title: 'Register', form: RegisterForm()),

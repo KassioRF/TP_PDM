@@ -3,12 +3,16 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:gkfin/widgets/home_overview.dart';
 import 'package:gkfin/widgets/list_records.dart';
 import 'package:gkfin/widgets/filter_items.dart';
+import 'package:gkfin/widgets/pick_date.dart';
+import 'package:gkfin/widgets/add_register.dart';
 
 // import '../models/records.dart';
 import '../data/dummy_data.dart';
 import '../models/records.dart';
+
 
 // default box decoration 
 final _boxDecoration =  BoxDecoration(
@@ -34,7 +38,7 @@ class HomeView extends StatefulWidget {
 
 class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
 
-  final String _currMonth = 'Setembro de 2022';
+  // final String _currMonth = 'Setembro de 2022';
   late TabController _tabController;
   final List _mockData = DUMMY_RECORDS;
   
@@ -81,71 +85,14 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
               flex:3,
               //Componentizar os containers! 1 Widget pra cada divisão
               //header
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  //proft
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      // Icon(Icons.keyboard_double_arrow_up_sharp), // alternativa
-                      Icon(Icons.arrow_downward),
-                    ],
-                  ),
-                  // balance
-                  Column(
-                    children: <Widget>[
-                      Icon(Icons.currency_exchange_sharp),
-
-                    ],
-                  ),
-                  // spent
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      // Icon(Icons.keyboard_double_arrow_up_sharp), alternativa
-                      Icon(Icons.arrow_upward),
-
-                    ],
-                  ),
-                ],
-              ),
+              child: HomeOverView(),
             ),
               // Data slider
             // Divider(indent: 15, endIndent: 15,),
             Expanded(
               flex: 1,
               child: Card(
-                // child: Padding(                
-                  // color: Theme.of(context).backgroundColor,
-                  // @TODO Include box decoration
-                  // decoration: _boxDecoration,
-                  child: Row(                
-                    // crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      //@TODO ADD BTN EVENT
-                      IconButton(
-                        padding: EdgeInsets.zero,
-                        onPressed: (){}, 
-                        icon: Icon(Icons.keyboard_arrow_left),
-                      ),
-                      Text(_currMonth,
-                        style: TextStyle(
-                          fontStyle: FontStyle.italic,
-                          fontSize: 12,
-                        ),
-                      ),
-                      //@TODO ADD BTN EVENT
-                      IconButton(
-                        padding: EdgeInsets.zero,
-                        onPressed: (){},
-                        icon: Icon(Icons.keyboard_arrow_right),
-                      
-                      ),
-                    ],
-                  ),
-                // ),
+                  child: PickDate(),
               ),
             ),
             
@@ -179,7 +126,7 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
         //@TODO ADD BTN EVENT
         onPressed: (){},
 
-      ),       
+      ),
       // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       //Bottom bar

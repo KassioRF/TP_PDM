@@ -69,7 +69,7 @@ class _RegisterForm extends State<RegisterForm> {
                   fillColor: Colors.white,
                   filled: true,
                   suffixIcon: IconButton(
-                    icon: Icon( _isObscure ? Icons.visibility : Icons.visibility_off),
+                    icon: Icon( _isObscure ?  Icons.visibility_off : Icons.visibility),
                     onPressed: () {
                       setState(() {
                         _isObscure = !_isObscure;
