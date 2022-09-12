@@ -70,7 +70,7 @@ class MyApp extends StatelessWidget {
         // If true: Redirect to main view
         // Else: Redirect to LoginView
         //home: const LoginView(title: 'Login UI',),
-        initialRoute: '/profile',
+        initialRoute: '/',
         // Ref: Aulas: APP41/42
         routes: {
           // AppRoutes.LOGIN: (ctx) => const LoginView(title: 'Login UI'),
