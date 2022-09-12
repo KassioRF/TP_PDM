@@ -41,28 +41,59 @@ class _AddRegister extends State<AddRegister> {
 
   final List<Color> _fill = [
     Colors.green.withOpacity(.2),
-    Colors.blue.withOpacity(.2),
     Colors.red.withOpacity(.2),
+    Colors.deepPurple.withOpacity(.2),
   ];
   final List<Color> _border = [
     Colors.green,
-    Colors.blue,
     Colors.red,
+    Colors.deepPurple,
   ];
 
   late Color _fillSelected;
   late Color _borderSelected;
 
-
+  late bool _confirmSave;
 
   TextEditingController dateinput = TextEditingController(); 
   @override
   void initState() {
     super.initState();
+    _confirmSave = false;
     _selections[0] = true;
     _fillSelected = _fill[0];
     _borderSelected = _border[0];
-     dateinput.text = "";
+    dateinput.text = "";
+
+  }
+
+
+  showDialogConfirm(BuildContext context) {
+    print('show dialog');
+    return showDialog(context: context,
+      builder: (context){    
+        return StatefulBuilder(builder: (context,setState){
+          return AlertDialog(
+            content: Text('< ...Confira os dados antes de salvar>'),
+            actions: <Widget>[                
+              IconButton(onPressed: (){
+                  _confirmSave = false;
+                  Navigator.of(context).pop(true); 
+                },               
+              icon: const Icon(Icons.close)),
+              IconButton(onPressed: (){
+                 _confirmSave = true;
+                 Navigator.of(context).pop(true); 
+                },
+                icon: const Icon(Icons.check_sharp),
+                // Navigator.of(context).pop(true);
+              ),
+              
+            ],
+          );
+        });
+      },
+    );
   }
 
 
@@ -119,15 +150,6 @@ class _AddRegister extends State<AddRegister> {
                   )
                 ),
                 Container(
-                  margin: const EdgeInsets.all(10.0),
-                  child: Row(
-                    children: const <Widget> [
-                      Text('Invest.'),
-                      Icon(Icons.stacked_bar_chart, color: Colors.blue),      
-                    ],                    
-                  )
-                ),
-                Container(
                   margin: const EdgeInsets.all(15.0),
                   child: Row(
                     children: const <Widget> [
@@ -135,12 +157,22 @@ class _AddRegister extends State<AddRegister> {
                       Icon(Icons.arrow_downward, color: Colors.red),      
                     ],                    
                   )
-                ),        
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10.0),
+                  child: Row(
+                    children: const <Widget> [
+                      Text('Invest.'),
+                      Icon(Icons.stacked_bar_chart, color: Colors.deepPurple),      
+                    ],                    
+                  )
+                ),                
               ],
             ),
             
             Container(
               margin: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(10.0),
               child: Form(
                 key: _formKey,
                 child: Column (
@@ -203,25 +235,64 @@ class _AddRegister extends State<AddRegister> {
         )
       ),
       
-      floatingActionButton: 
-      Visibility(
-        visible: !keyboardIsOpen,
-        child: FloatingActionButton.extended(
-          // child: const Icon(Icons.add), // cuidado com esse const!
-          label: const Text('Adicionar'),
-          //@TODO ADD BTN EVENT
-          onPressed: (){
+    
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.check), // cuidado com esse const!
+        //@TODO ADD BTN EVENT
+        onPressed: () async{
             //@TODO VALIDATE
             // if (validation) {
               //Provider save register
             // }
+            await showDialogConfirm(context);
+            if (_confirmSave) {
+              // ignore: use_build_context_synchronously
+              Navigator.of(context).pop();
+              // ignore: use_build_context_synchronously
+              showSnackBar(context);
 
-            showSnackBar(context);
-            Navigator.of(context).pop();
+            }
+            print(_confirmSave);
+
+            // Navigator.of(context).pop();
           },
 
-        ),
-      )
+      ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      //Bottom bar
+      bottomNavigationBar: BottomAppBar(
+        // shape: CircularNotchedRectangle(),
+        shape: CircularNotchedRectangle(),
+        notchMargin: 4,
+        color: Theme.of(context).primaryColor,
+        child: Container(height: 37,)
+
+      ),    
+    
+    
+    
+    
+    
+      // floatingActionButton: 
+      // Visibility(
+      //   visible: !keyboardIsOpen,
+      //   child: FloatingActionButton.extended(
+      //     // child: const Icon(Icons.add), // cuidado com esse const!
+      //     label: const Text('Adicionar'),
+      //     //@TODO ADD BTN EVENT
+      //     onPressed: (){
+      //       //@TODO VALIDATE
+      //       // if (validation) {
+      //         //Provider save register
+      //       // }
+
+      //       showSnackBar(context);
+      //       Navigator.of(context).pop();
+      //     },
+
+      //   ),
+      // )
     );
   }
 }
@@ -235,8 +306,9 @@ void showSnackBar(context) {
       behavior: SnackBarBehavior.floating,
       action: SnackBarAction(
         label: "ok",
-        onPressed: (){
+        onPressed: () async{
           // Provider.of<Records>(context, listen: false).undoDelete(id, record);
+          // await showDialogConfirm(context);
         },
       ),
     ),
