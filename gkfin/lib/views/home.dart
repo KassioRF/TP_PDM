@@ -10,9 +10,9 @@ import 'package:gkfin/widgets/pick_date.dart';
 import 'package:gkfin/views/add_register.dart';
 
 // import '../models/records.dart';
+// import '../models/records.dart';
 import '../data/dummy_data.dart';
-import '../models/records.dart';
-
+import '../utils/app_routes.dart';
 
 // default box decoration 
 final _boxDecoration =  BoxDecoration(
@@ -40,7 +40,6 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
 
   // final String _currMonth = 'Setembro de 2022';
   late TabController _tabController;
-  final List _mockData = DUMMY_RECORDS;
   
 
   @override
@@ -64,7 +63,26 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
         title: Text('Hello, User'),
         actions: [
           //@TODO ADD BTN EVENT
-          IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert),)        
+          // IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert),)        
+          PopupMenuButton(
+            onSelected: (value) {
+              if (value == 0) {
+                Navigator.of(context).pushNamed(AppRoutes.ABOUT);
+              }else if (value == 1) {
+                Navigator.of(context).pushNamed(AppRoutes.LOGIN);
+              }
+            },
+            itemBuilder: (ctx) => [            
+              PopupMenuItem(
+                value: 0,
+                child: Text('Sobre')
+              ),
+              PopupMenuItem(
+                value: 1,
+                child: Text('Logout')
+              ),
+            ],
+          ),
         ],
         bottom: TabBar(
           controller: _tabController,

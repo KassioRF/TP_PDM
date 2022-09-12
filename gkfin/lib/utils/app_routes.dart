@@ -9,7 +9,7 @@ class AppRoutes {
   static const REGISTER = '/register';
   static const RECOVERYPASS = '/recoverpass';
   static const ADDREGISTER = '/addregister';
-
+  static const ABOUT = '/about';
 
 }
 
