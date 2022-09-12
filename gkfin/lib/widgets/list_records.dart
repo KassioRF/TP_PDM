@@ -112,6 +112,7 @@ class ListRecordsItem extends StatelessWidget {
         Provider.of<Records>(context, listen: false).removeRecord(record.id);
       },
       child: Card (
+        //@TODO Make smaller items
         child: ListTile(
           leading: icon,
           title: Text(

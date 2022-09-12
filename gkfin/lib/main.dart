@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:provider/provider.dart';
 // import 'package:provider/provider.dart';
-
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import './utils/app_routes.dart';
 
@@ -56,7 +56,13 @@ class MyApp extends StatelessWidget {
           // @TODO add app bar theme here...
 
         ),
-
+        // Alterar DatePicker pra Pt-br
+        // ref: https://pt.stackoverflow.com/questions/399390/flutter-alterar-internacionaliza%C3%A7%C3%A3o-de-nomes-de-datas
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate
+        ],
+        supportedLocales: [const Locale('pt', 'BR')],
         // @TODO check if user validation is cached
         // If true: Redirect to main view
         // Else: Redirect to LoginView
