@@ -82,7 +82,7 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
         child: Column(
           children: <Widget>[
             Expanded(
-              flex:4,
+              flex:3,
               //Componentizar os containers! 1 Widget pra cada divisão
               //header
               child: HomeOverView(),
@@ -107,7 +107,7 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
             // ListView inside Cloumn:
             // ref: https://www.youtube.com/watch?v=Gylc2SiLxmE
             Expanded(
-              flex: 6,              
+              flex: 7,              
               child: Container(
                 padding: EdgeInsets.all(5.0),
                 decoration: _boxDecoration,               
