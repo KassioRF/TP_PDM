@@ -70,7 +70,6 @@ class MyApp extends StatelessWidget {
         initialRoute: '/splash',
         // Ref: Aulas: APP41/42
         routes: {
-          // AppRoutes.LOGIN: (ctx) => const LoginView(title: 'Login UI'),
           // AppRoutes.HOME: (ctx) => _isLogedIn ? HomeView(title: 'Home',) : EnterView(title: 'Login', form:  LoginForm()),
           AppRoutes.SPLASH: (ctx) => const Splash(),
           AppRoutes.HOME: (ctx) => const HomeView(title: 'Home',),

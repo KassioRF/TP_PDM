@@ -4,7 +4,9 @@ import 'package:intl/intl.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-// https://gist.github.com/andre-bahia/14fdb0c751822f848a364b3129df1fed
+
+// Mantém o Input text no formato BRL
+//ref: https://gist.github.com/andre-bahia/14fdb0c751822f848a364b3129df1fed
 class CurrencyPtBrInputFormatter extends TextInputFormatter {
 
   @override
