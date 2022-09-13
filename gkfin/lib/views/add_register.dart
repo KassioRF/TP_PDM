@@ -250,11 +250,7 @@ class _AddRegister extends State<AddRegister> {
               Navigator.of(context).pop();
               // ignore: use_build_context_synchronously
               showSnackBar(context);
-
             }
-            print(_confirmSave);
-
-            // Navigator.of(context).pop();
           },
 
       ),
