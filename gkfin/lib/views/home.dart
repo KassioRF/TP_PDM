@@ -8,7 +8,11 @@ import 'package:gkfin/widgets/list_records.dart';
 import 'package:gkfin/widgets/filter_items.dart';
 import 'package:gkfin/widgets/pick_date.dart';
 import 'package:gkfin/views/add_register.dart';
+import 'package:gkfin/providers/records.dart';
+import 'package:provider/provider.dart';
+
 import '../utils/app_routes.dart';
+import '../utils/filter.dart';
 
 // import '../models/records.dart';
 // import '../models/records.dart';
@@ -40,13 +44,21 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
 
   // final String _currMonth = 'Setembro de 2022';
   late TabController _tabController;
-  
+  late String _currentTab;
 
   @override
   void initState(){
     super.initState();
     _tabController = TabController(vsync: this, length: 2);
-    // _tabController = TabController(vsync: this, length: 2);
+    _tabController.addListener(_handleTabSelection);
+    _currentTab = Filter.ALL;
+  }
+
+  void _handleTabSelection(){
+    if(_tabController.indexIsChanging){
+      _currentTab = _tabController.index == 0 ? Filter.ALL : Filter.INVEST;
+      print(_currentTab);
+    }
   }
   // ignore: empty_constructor_bodies
   @override
@@ -92,6 +104,9 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
           ),
         ],
         bottom: TabBar(
+          onTap: (index){
+            Provider.of<Records>(context, listen: false).setFilter(_currentTab);
+          },
           controller: _tabController,
           // unselectedLabelColor: Theme.of(context).backgroundColor,
           // indicator: BoxDecoration(color: Theme.of(context).backgroundColor),
@@ -110,7 +125,13 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
               flex:3,
               //Componentizar os containers! 1 Widget pra cada divisão
               //header
-              child: HomeOverView(),
+              child: TabBarView(
+                controller: _tabController,
+                children: <Widget>[
+                    HomeOverView(),
+                    HomeOverView(),
+                ],
+              ),
             ),
               // Data slider
             // Divider(indent: 15, endIndent: 15,),
@@ -144,6 +165,10 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
 
         ),
       ),
+
+
+
+
       //FAB add register
       //ref: https://stackoverflow.com/questions/59455684/how-to-make-bottomnavigationbar-notch-transparent
       floatingActionButton: FloatingActionButton(

@@ -15,7 +15,9 @@ class Records with ChangeNotifier {
     if (filter != Filter.ALL) {
       return _items.where((element) => element.type == filter).toList();
     }
-    return [..._items];
+    //return [..._items];
+    //exlude invest for all
+    return _items.where((element) => element.type != Filter.INVEST).toList();
   }
 
   void addRecord(Record record) {

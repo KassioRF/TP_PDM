@@ -26,121 +26,168 @@ class _HomeOverView extends State<HomeOverView> {
   @override
   Widget build(BuildContext context) {
     String activeFilter = Provider.of<Records>(context).getFilter();
-    // Make an Widget "clickable" with InkWell
-    // ref: https://stackoverflow.com/questions/43692923/flutter-container-onpressed
-    // Answered by @CopsOnRoad
-    return Column(
-      children: <Widget>[
-        //Saldo
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            InkWell(
-              onTap: (){
-                Provider.of<Records>(context, listen: false).setFilter(Filter.ALL);
-                // print('set provider: filter value');
-              },
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    padding: const  EdgeInsets.only(top:10),
-                    child: const  Text('Saldo', style: TextStyle(fontSize: 13) ),
 
-                  ),              
-                  Row(
-                    children: <Widget>[
-                      Container(                
-                        padding: const EdgeInsets.fromLTRB(5, 10, 10, 5),
-                        decoration: _boxDecoration,
-                        child: Text(
-                          '\$ 255.55',
-                          style: TextStyle (
-                            color: Colors.blue.withOpacity(1),
-                            fontWeight: FontWeight.bold,
+    return activeFilter != Filter.INVEST ? // Show's OverView for Spent/Proft's
+      Column(
+        children: <Widget>[
+          //Saldo
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              // Make an Widget "clickable" with InkWell
+              // ref: https://stackoverflow.com/questions/43692923/flutter-container-onpressed
+              // Answered by @CopsOnRoad
+              InkWell(
+                onTap: (){
+                  Provider.of<Records>(context, listen: false).setFilter(Filter.ALL);
+                  // print('set provider: filter value');
+                },
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      padding: const  EdgeInsets.only(top:10),
+                      child: const  Text('Saldo', style: TextStyle(fontSize: 13) ),
+
+                    ),              
+                    Row(
+                      children: <Widget>[
+                        Container(                
+                          padding: const EdgeInsets.fromLTRB(5, 10, 10, 5),
+                          decoration: _boxDecoration,
+                          child: Text(
+                            '\$ 255.55',
+                            style: TextStyle (
+                              color: Colors.blue.withOpacity(1),
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
-                      ),
-                      const Icon(Icons.currency_exchange_sharp, color: Colors.blue, size: 16,),
-                      
-                    ],
-                  ),
-                ],
+                        const Icon(Icons.currency_exchange_sharp, color: Colors.blue, size: 16,),
+                        
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
-        // Receita despesa
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            //proft
-            InkWell(
-              onTap: (){
-                Provider.of<Records>(context, listen: false).setFilter(Filter.PROFIT);
-                // print('set provider: filter value');
-              },
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  // Icon(Icons.keyboard_double_arrow_up_sharp), // alternativa
-                  const Text('Receitas', style: TextStyle(fontSize: 13)),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(5, 10, 5, 5),
-                        decoration: _boxDecoration,
-                        child: Text(
-                          '\$ 255.55',
-                          style: TextStyle (
-                            color: Colors.green.withOpacity(1),
-                            fontWeight: FontWeight.bold,
+            ],
+          ),
+          // Receita despesa
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              //proft
+              InkWell(
+                onTap: (){
+                  Provider.of<Records>(context, listen: false).setFilter(Filter.PROFIT);
+                  // print('set provider: filter value');
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    // Icon(Icons.keyboard_double_arrow_up_sharp), // alternativa
+                    const Text('Receitas', style: TextStyle(fontSize: 13)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(5, 10, 5, 5),
+                          decoration: _boxDecoration,
+                          child: Text(
+                            '\$ 255.55',
+                            style: TextStyle (
+                              color: Colors.green.withOpacity(1),
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
-                      ),
-                  const Icon(Icons.arrow_upward, color: Colors.green, size: 22,),
-                    ],
-                  ),
+                    const Icon(Icons.arrow_upward, color: Colors.green, size: 22,),
+                      ],
+                    ),
 
-                ],
+                  ],
+                ),
               ),
-            ),
-            // spent
-            InkWell(
-              onTap: (){
-                Provider.of<Records>(context, listen: false).setFilter(Filter.SPENT);
-                // print('set provider: filter value');
-              },              
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  // Icon(Icons.keyboard_double_arrow_up_sharp), alternativa
-                  const Text('Despesas', style: TextStyle(fontSize: 13), ),
-                  Row(
-                    children: <Widget>[
-                      const Icon(Icons.arrow_downward, color: Colors.redAccent, size: 22,),
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(5, 10, 5, 5),
-                        decoration: _boxDecoration,
-                        child: Text(
-                          '\$ 255.55',
-                          style: TextStyle (
-                            color: Colors.red.withOpacity(1),
-                            fontWeight: FontWeight.bold,
+              // spent
+              InkWell(
+                onTap: (){
+                  Provider.of<Records>(context, listen: false).setFilter(Filter.SPENT);
+                  // print('set provider: filter value');
+                },              
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    // Icon(Icons.keyboard_double_arrow_up_sharp), alternativa
+                    const Text('Despesas', style: TextStyle(fontSize: 13), ),
+                    Row(
+                      children: <Widget>[
+                        const Icon(Icons.arrow_downward, color: Colors.redAccent, size: 22,),
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(5, 10, 5, 5),
+                          decoration: _boxDecoration,
+                          child: Text(
+                            '\$ 255.55',
+                            style: TextStyle (
+                              color: Colors.red.withOpacity(1),
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
 
-                ],
+                  ],
+                ),
+              ),                  
+            ],          
+          ),
+        ],
+      )
+      
+      : // Show's OverView for Invets
+
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              InkWell(
+                onTap: (){
+                  // Provider.of<Records>(context, listen: false).setFilter(Filter.ALL);
+                  // print('set provider: filter value');
+                },
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      padding: const  EdgeInsets.only(top:10),
+                      child: const  Text('Investimentos', style: TextStyle(fontSize: 13) ),
+
+                    ),              
+                    Row(
+                      children: <Widget>[
+                        Container(                
+                          padding: const EdgeInsets.fromLTRB(5, 10, 10, 5),
+                          decoration: _boxDecoration,
+                          child: Text(
+                            '\$ 200.0',
+                            style: TextStyle (
+                              color: Colors.deepPurple.withOpacity(1),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const Icon(Icons.stacked_bar_chart, color: Colors.deepPurple,),
+                        
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),                  
-          ],          
-        ),
-      ],
-    );
+            ],
+          ),          
+        ],
+      );
   }
 }
