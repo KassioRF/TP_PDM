@@ -18,9 +18,9 @@ class _RecoveryForm extends State<RecoveryForm> {
       // Childrens
       children: <Widget>[
         // Screen Title                  
-        const Text(
+        Text(
           'Lembrar senha',
-          style: TextStyle(fontSize: 18.0),
+          style: Theme.of(context).textTheme.headline4,
         ),
 
         const SizedBox(height: 45,), // space between elements

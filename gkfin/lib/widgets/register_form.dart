@@ -22,9 +22,9 @@ class _RegisterForm extends State<RegisterForm> {
       // Childrens
       children: <Widget>[
         // Screen Title                  
-        const Text(
+        Text(
           'Cadastro',
-          style: TextStyle(fontSize: 18.0),
+          style: Theme.of(context).textTheme.headline4,
         ),
 
         const SizedBox(height: 20,), // space between elements

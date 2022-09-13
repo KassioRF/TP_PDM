@@ -27,7 +27,7 @@ class _LoginForm extends State<LoginForm> {
         // Screen Title                  
         Text(
           'Bem vindo!',
-          style: Theme.of(context).textTheme.headline1,
+          style: Theme.of(context).textTheme.headline4,
         ),
 
         const SizedBox(height: 45,), // space between elements

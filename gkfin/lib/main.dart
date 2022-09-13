@@ -2,6 +2,7 @@
 
 // --no-sound-null-safety
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:provider/provider.dart';
 // import 'package:provider/provider.dart';
@@ -52,9 +53,11 @@ class MyApp extends StatelessWidget {
           // fontFamily: GoogleFon,
 
           // Tex Styling for Headlines, titles, bodies, and more...
-          textTheme: const TextTheme(
-            headline1: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.black54),
-          ),
+          textTheme: GoogleFonts.latoTextTheme(Theme.of(context).textTheme),
+          // textTheme: const TextTheme(
+          //   headline1: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.black54),
+          // ),
+
 
           // @TODO add app bar theme here...
 

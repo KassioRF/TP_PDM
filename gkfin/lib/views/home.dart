@@ -57,7 +57,6 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
   void _handleTabSelection(){
     if(_tabController.indexIsChanging){
       _currentTab = _tabController.index == 0 ? Filter.ALL : Filter.INVEST;
-      print(_currentTab);
     }
   }
   // ignore: empty_constructor_bodies

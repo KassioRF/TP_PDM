@@ -5,6 +5,7 @@ class Record with ChangeNotifier {
   final String type;
   final double value;
   final String desc;
+  final String date;
   //add date
 
   Record({
@@ -12,6 +13,7 @@ class Record with ChangeNotifier {
     required this.type,
     required this.value,
     required this.desc,
+    required this.date,
   });
   
 }

@@ -120,6 +120,10 @@ class ListRecordsItem extends StatelessWidget {
             record.desc,
             style: TextStyle(color: color),
           ),
+          subtitle: Text(
+            record.date,
+            style: TextStyle(color: Colors.grey.withOpacity(.7), fontSize: 12),
+          ),
           trailing: Text(
             value,
             style: TextStyle(color: color, fontWeight: FontWeight.bold),
