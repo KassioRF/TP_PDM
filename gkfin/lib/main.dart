@@ -54,12 +54,6 @@ class MyApp extends StatelessWidget {
 
           // Tex Styling for Headlines, titles, bodies, and more...
           textTheme: GoogleFonts.latoTextTheme(Theme.of(context).textTheme),
-          // textTheme: const TextTheme(
-          //   headline1: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.black54),
-          // ),
-
-
-          // @TODO add app bar theme here...
 
         ),
         // Alterar DatePicker pra Pt-br
@@ -68,12 +62,12 @@ class MyApp extends StatelessWidget {
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate
         ],
-        supportedLocales: [const Locale('pt', 'BR')],
+        // supportedLocales: [const Locale('pt', 'BR')],
         // @TODO check if user validation is cached
         // If true: Redirect to main view
         // Else: Redirect to LoginView
         //home: const LoginView(title: 'Login UI',),
-        initialRoute: '/',
+        initialRoute: '/splash',
         // Ref: Aulas: APP41/42
         routes: {
           // AppRoutes.LOGIN: (ctx) => const LoginView(title: 'Login UI'),

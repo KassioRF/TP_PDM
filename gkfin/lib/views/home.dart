@@ -13,10 +13,7 @@ import 'package:provider/provider.dart';
 
 import '../utils/app_routes.dart';
 import '../utils/filter.dart';
-
-// import '../models/records.dart';
-// import '../models/records.dart';
-import '../data/dummy_data.dart';
+import '../data/dummy_user_data.dart';
 
 // default box decoration 
 final _boxDecoration =  BoxDecoration(
@@ -44,7 +41,7 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
 
   // final String _currMonth = 'Setembro de 2022';
   late TabController _tabController;
-  late String _currentTab;
+  String _currentTab = Filter.ALL;
 
   @override
   void initState(){
@@ -55,17 +52,17 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
   }
 
   void _handleTabSelection(){
-    if(_tabController.indexIsChanging){
-      _currentTab = _tabController.index == 0 ? Filter.ALL : Filter.INVEST;
-    }
+    setState(() {
+      _currentTab = _tabController.index == 0 ? Filter.ALL : Filter.INVEST;   
+    });
   }
+
   // ignore: empty_constructor_bodies
   @override
   Widget build(BuildContext context) {
   //DATA FOR WIDGET REGISTER ITEMS
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -78,7 +75,7 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
           icon: Icon(Icons.account_circle, size:40),
         ),
 
-        title: Text('Hello, User'),
+        title: Text("Olá, ${UserPreferences.userTest.name}", style: TextStyle(fontSize: 18),),
         actions: [
           //@TODO ADD BTN EVENT
           // IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert),)        
@@ -122,18 +119,10 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
           children: <Widget>[
             Expanded(
               flex:3,
-              //Componentizar os containers! 1 Widget pra cada divisão
               //header
-              child: TabBarView(
-                controller: _tabController,
-                children: <Widget>[
-                    HomeOverView(),
-                    HomeOverView(),
-                ],
-              ),
+              child:HomeOverView(filter: _currentTab)
             ),
-              // Data slider
-            // Divider(indent: 15, endIndent: 15,),
+            // Data slider
             Expanded(
               flex: 1,
               child: Card(
@@ -156,8 +145,7 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
               child: Container(
                 padding: EdgeInsets.all(5.0),
                 decoration: _boxDecoration,               
-                child: ListRecords(),
-                // child: showList(),
+                child: ListRecords(),                              
               ),
             ),
           ],

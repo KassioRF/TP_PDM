@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/records.dart';
 import '../utils/filter.dart';
+
+
 // default box decoration 
 final _boxDecoration =  BoxDecoration(
   borderRadius: BorderRadius.circular(10),
@@ -15,7 +17,9 @@ final _boxDecoration =  BoxDecoration(
 
 
 class HomeOverView extends StatefulWidget {
-  const HomeOverView({super.key});
+  const HomeOverView({ Key?key , required this.filter}) : super(key:key);
+
+  final String filter;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -25,9 +29,7 @@ class HomeOverView extends StatefulWidget {
 class _HomeOverView extends State<HomeOverView> {
   @override
   Widget build(BuildContext context) {
-    String activeFilter = Provider.of<Records>(context).getFilter();
-
-    return activeFilter != Filter.INVEST ? // Show's OverView for Spent/Proft's
+    return widget.filter != Filter.INVEST ? // Show's OverView for Spent/Proft's
       Column(
         children: <Widget>[
           //Saldo
@@ -41,7 +43,7 @@ class _HomeOverView extends State<HomeOverView> {
                 onTap: (){
                   Provider.of<Records>(context, listen: false).setFilter(Filter.ALL);
                   // print('set provider: filter value');
-                },
+                },                
                 child: Column(
                   children: <Widget>[
                     Container(

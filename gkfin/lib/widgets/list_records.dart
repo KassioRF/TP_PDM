@@ -12,7 +12,7 @@ import '../providers/record.dart';
 
 
 class ListRecords extends StatefulWidget {
-  const ListRecords( {Key? key } ) : super(key:key);
+  const ListRecords( {Key? key} ) : super(key:key);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -35,9 +35,12 @@ class _ListRecords extends State<ListRecords>{
   Widget build(BuildContext context) {
     return Consumer<Records>(
       builder: (ctx, records, child) {
+        // records.setFilter(widget.filter);
         return ListView.builder(
           itemCount: records.items.length,
-          itemBuilder: (ctx, i) => ListRecordsItem(index: i, record: records.items[i] ,refresh: refresh),
+          itemBuilder: (ctx, i) => 
+          ListRecordsItem(index: i, record: records.items[i] ,refresh: refresh)
+          ,
         );
       },
     );
@@ -61,7 +64,6 @@ class ListRecordsItem extends StatelessWidget {
         behavior: SnackBarBehavior.floating,
         action: SnackBarAction(
           label: "desfazer",
-
           onPressed: (){
             Provider.of<Records>(context, listen: false).undoDelete(id, record);
           },

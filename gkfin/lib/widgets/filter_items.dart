@@ -54,14 +54,14 @@ class _FilterItems extends State<FilterItems>{
                     Provider.of<Records>(context, listen: false).setFilter(value!);
                   },                                    
                 ),
-                RadioListTile(
-                  title: const Text('investimentos'),
-                  value: Filter.INVEST, 
-                  groupValue: activeFilter, 
-                  onChanged: (value){
-                    Provider.of<Records>(context, listen: false).setFilter(value!);
-                  },                  
-                ),
+                // RadioListTile(
+                //   title: const Text('investimentos'),
+                //   value: Filter.INVEST, 
+                //   groupValue: activeFilter, 
+                //   onChanged: (value){
+                //     Provider.of<Records>(context, listen: false).setFilter(value!);
+                //   },                  
+                // ),
                              
               ],
             )
@@ -88,18 +88,16 @@ class _FilterItems extends State<FilterItems>{
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[                  
         Expanded(
-
           child: IconButton(
-          onPressed: () async {
-            // await showDialogFilter(context).then((_) => setState((){}));            
-            await showDialogFilter(context);
-          },
-          icon: const Icon(Icons.filter_list,
-          color: Colors.black54,
+            onPressed: () async {
+              // await showDialogFilter(context).then((_) => setState((){}));            
+              if (Provider.of<Records>(context, listen: false).getFilter() != Filter.INVEST) {
+                await showDialogFilter(context);
+              }
+            },
+          icon: const Icon(Icons.filter_list, color: Colors.black54,),
           ),
         ),
-        ),
-
         const Expanded(
           flex: 3,
           child: TextField(
@@ -110,7 +108,6 @@ class _FilterItems extends State<FilterItems>{
           ),
         ),
       ],
-
     );      
 
   }
