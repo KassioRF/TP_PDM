@@ -56,7 +56,9 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        
         toolbarHeight: 45,
         //@TODO ADD BTN EVENT
         leading: IconButton(onPressed: () {

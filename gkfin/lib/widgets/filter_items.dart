@@ -78,21 +78,35 @@ class _FilterItems extends State<FilterItems>{
 
   }
 
+
+
+
+
   @override
   Widget build(BuildContext context) {
-
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[                  
-        const Text('Lançamentos'),
-        CupertinoButton(
+        Expanded(
+
+          child: IconButton(
           onPressed: () async {
             // await showDialogFilter(context).then((_) => setState((){}));            
             await showDialogFilter(context);
           },
-          child: const Icon(Icons.filter_list,
+          icon: const Icon(Icons.filter_list,
           color: Colors.black54,
+          ),
+        ),
+        ),
+
+        const Expanded(
+          flex: 3,
+          child: TextField(
+            cursorColor: Colors.grey,
+            decoration: InputDecoration(
+              suffixIcon: Icon(Icons.search),
+            ),
           ),
         ),
       ],
