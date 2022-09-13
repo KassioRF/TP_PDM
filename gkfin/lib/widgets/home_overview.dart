@@ -29,6 +29,11 @@ class HomeOverView extends StatefulWidget {
 class _HomeOverView extends State<HomeOverView> {
   @override
   Widget build(BuildContext context) {
+    double allSpent = Provider.of<Records>(context, listen: false).getAllSpent();
+    double allProfit = Provider.of<Records>(context, listen: false).getAllProfit();
+    double allInvest = Provider.of<Records>(context, listen: false).getAllInvest();
+    double balance = Provider.of<Records>(context, listen: false).getBalance();
+
     return widget.filter != Filter.INVEST ? // Show's OverView for Spent/Proft's
       Column(
         children: <Widget>[
@@ -57,7 +62,7 @@ class _HomeOverView extends State<HomeOverView> {
                           padding: const EdgeInsets.fromLTRB(5, 10, 10, 5),
                           decoration: _boxDecoration,
                           child: Text(
-                            '\$ 255.55',
+                            "\$ ${balance}" ,
                             style: TextStyle (
                               color: Colors.blue.withOpacity(1),
                               fontWeight: FontWeight.bold,
@@ -96,7 +101,7 @@ class _HomeOverView extends State<HomeOverView> {
                           padding: const EdgeInsets.fromLTRB(5, 10, 5, 5),
                           decoration: _boxDecoration,
                           child: Text(
-                            '\$ 255.55',
+                            "\$ ${allProfit}",
                             style: TextStyle (
                               color: Colors.green.withOpacity(1),
                               fontWeight: FontWeight.bold,
@@ -129,7 +134,7 @@ class _HomeOverView extends State<HomeOverView> {
                           padding: const EdgeInsets.fromLTRB(5, 10, 5, 5),
                           decoration: _boxDecoration,
                           child: Text(
-                            '\$ 255.55',
+                            "\$ ${allSpent}",
                             style: TextStyle (
                               color: Colors.red.withOpacity(1),
                               fontWeight: FontWeight.bold,
@@ -173,7 +178,7 @@ class _HomeOverView extends State<HomeOverView> {
                           padding: const EdgeInsets.fromLTRB(5, 10, 10, 5),
                           decoration: _boxDecoration,
                           child: Text(
-                            '\$ 200.0',
+                            "\$ ${allInvest}",
                             style: TextStyle (
                               color: Colors.deepPurple.withOpacity(1),
                               fontWeight: FontWeight.bold,

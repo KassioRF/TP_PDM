@@ -50,4 +50,41 @@ class Records with ChangeNotifier {
     notifyListeners();
   }
 
+  double getAllSpent() {
+    double val = 0.0;
+    for (Record item in _items) {
+      if (item.type == 'spent') {
+        val += item.value;
+      }
+    }
+    return double.parse((val).toStringAsFixed(2));
+  }
+
+  double getAllProfit() {
+    double val = 0.0;
+    for (Record item in _items) {
+      if (item.type == 'profit') {
+        val += item.value;
+      }
+    }
+    return double.parse((val).toStringAsFixed(2));
+  }
+
+  double getAllInvest() {
+    double val = 0.0;
+    for (Record item in _items) {
+      if (item.type == 'invest') {
+        val += item.value;
+      }
+    }
+    return double.parse((val).toStringAsFixed(2));
+  }
+
+  double getBalance() {
+    double spent = getAllSpent();
+    double proft = getAllProfit();
+    double balance = proft - spent; 
+    return double.parse((balance).toStringAsFixed(2));
+  }
+
 }
