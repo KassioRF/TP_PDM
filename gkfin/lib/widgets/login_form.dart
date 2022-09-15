@@ -1,5 +1,5 @@
 
-// Referência usada: https://github.com/hawier-dev/flutter-login-ui/blob/main/lib/login_screen.dart
+// Referência usada: https://github.com/hawier-dev/flutter-login-ui/blob/main/
 //@TODO Make an correct widget build
 
 import 'package:flutter/material.dart';
