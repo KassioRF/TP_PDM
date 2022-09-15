@@ -33,7 +33,8 @@ Para essa entrega está finalizado a primeira versão  do Front-End das páginas
 
 $ Com o Flutter e ambiente instalado na máquina:
 
-# Importar a pasta na IDE e realizar as configurações necessárias
+# Importar a pasta na IDE e realizar as configurações necessárias para rodar projetos flutter.
+
 # Executar o comando: flutter run --no-sound-null-safety (Visto que a aplicação utiliza o pacote provider (4.0.5))
 
 # Ou alternativamente: Baixar e instalar o GK-Financas.apk no seu smartphone!
