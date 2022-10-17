@@ -3,9 +3,22 @@ import 'record.dart';
 import '../data/dummy_data.dart';
 import '../utils/filter.dart';
 
+// Firebase tests
+import 'package:firebase_database/firebase_database.dart';
+
+
 //Change notifier: implementação do padrão Observer
 class Records with ChangeNotifier {
+  // FireBase
+
+  // referencia CRUD: 
+  // https://capsistema.com.br/index.php/2022/08/10/operacoes-crud-do-firebase-realtime-database-para-o-projeto-flutter/
+  DatabaseReference dbRecords = FirebaseDatabase.instance.ref().child('records');
+  
   // ignore: prefer_final_fields
+  
+  
+  
   List<Record> _items = DUMMY_RECORDS;
 
   String filter = Filter.ALL;
@@ -20,9 +33,23 @@ class Records with ChangeNotifier {
     return _items.where((element) => element.type != Filter.INVEST).toList();
   }
 
-  void addRecord(Record record) {
-    _items.add(record);
-    notifyListeners();
+  // void addRecord(Record record) {
+  //   _items.add(record);
+  //   notifyListeners();
+  // }
+
+  void refreshRecords() async {
+
+  }
+
+  void addRecord(Record record) async {
+    await dbRecords.push().set({
+      "type": record.type,
+      "value": record.value,
+      "desc": record.desc,
+      "date": record.date
+    }).then((value) => notifyListeners());
+    
   }
 
   void undoDelete(int index, Record record,) {

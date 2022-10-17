@@ -3,6 +3,11 @@
 // --no-sound-null-safety
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+// firebase
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:provider/provider.dart';
 // import 'package:provider/provider.dart';
@@ -22,10 +27,17 @@ import 'package:gkfin/widgets/splash.dart';
 import 'package:gkfin/widgets/login_form.dart';
 import 'package:gkfin/widgets/register_form.dart';
 import 'package:gkfin/widgets/recover_password.dart';
-void main() {
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Inicializar firebase com a aplicação
+  // fonte: https://stackoverflow.com/questions/70486658/no-firebase-app-has-been-created-call-firebase-initializeapp
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(const MyApp());
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -82,7 +94,5 @@ class MyApp extends StatelessWidget {
         },
       ),
     );
-
-
   }
 }

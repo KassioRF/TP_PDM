@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gkfin/providers/record.dart';
+import 'package:gkfin/providers/records.dart';
 import 'package:intl/intl.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provider/provider.dart';
 
 
 // Mantém o Input text no formato BRL
@@ -38,45 +41,108 @@ class AddRegister extends StatefulWidget {
 }
 
 class _AddRegister extends State<AddRegister> {
-  final _formKey = GlobalKey<FormState>();
-  final List<bool> _selections = List.generate(3, (_)=>false);
+  final _formKey = GlobalKey<FormState>(); // variable for controll form events
+  final _formData = <String, Object>{}; // variable for store data form
+  
+  // _selections it's for assign selected record type
+  // _selections[0] == profit | _selections[1] == spent | _selections[2] == invest
+  final List<bool> _selections = List.generate(3, (_)=>false); 
 
+  // define colors for each record type (spent, profit, invest);
   final List<Color> _fill = [
     Colors.green.withOpacity(.2),
     Colors.red.withOpacity(.2),
     Colors.deepPurple.withOpacity(.2),
   ];
+  // define border for each record type (spent, profit, invest);
   final List<Color> _border = [
     Colors.green,
     Colors.red,
     Colors.deepPurple,
   ];
 
+  // to controll colors for selected type
   late Color _fillSelected;
   late Color _borderSelected;
 
+
+  // confirm record stored
   late bool _confirmSave;
 
+  //show or hide awaiting spinner
+  late bool _showSpinner;
+
+  // custom widget: input for date
   TextEditingController dateinput = TextEditingController(); 
+
+
   @override
   void initState() {
     super.initState();
     _confirmSave = false;
     _selections[0] = true;
+    _formData['type'] = 'profit';
     _fillSelected = _fill[0];
     _borderSelected = _border[0];
     dateinput.text = "";
-
+    _showSpinner = false;
+    
+    
   }
 
+
+  // save form
+  Future<void> _saveRecord(BuildContext context) async {
+    //
+    _formKey.currentState!.save();
+
+    print(' --- form ----');
+    print(_formData['value']);
+    print(_formData['desc']);
+    print(_formData['date']);
+    print(_formData['type']);
+
+    String _value = _formData['value'].toString().split(' ')[1];
+    _value = _value.replaceAll(',', '.');
+    double dbValue = double.parse(_value);
+
+    final record = Record(
+      id: 0, // for allow type
+      type: _formData['type'] as String,
+      value: dbValue, 
+      desc: _formData['desc'] as String,
+      date: _formData['date'] as String,
+    );  
+    
+    print(' --- Record ---');
+    print(record.id);
+    print(record.type);
+    print(record.value);
+    print(record.desc);
+    print(record.date);
+
+    // tentar inserir na coleção aqui!
+    final records = Provider.of<Records>(context, listen: false);
+    try {
+      records.addRecord(record);
+      _confirmSave = true;
+      _showSpinner = false;
+    } catch (error) {
+      print('error');
+     _showSpinner = false;
+    }
+
+  
+  }
 
   showDialogConfirm(BuildContext context) {
     print('show dialog');
     return showDialog(context: context,
       builder: (context){    
         return StatefulBuilder(builder: (context,setState){
-          return AlertDialog(
-            content: Text('< ...Confira os dados antes de salvar>'),
+          return !_showSpinner ? AlertDialog(
+            // content:  _showSpinner ? const CircularProgressIndicator(color: Colors.black12) : const Text('< ...Confira os dados antes de salvar>'),//Text('< ...Confira os dados antes de salvar>'),
+            content:  const Text('< ...Confira os dados antes de salvar>'),//Text('< ...Confira os dados antes de salvar>'),
             actions: <Widget>[                
               IconButton(onPressed: (){
                   _confirmSave = false;
@@ -84,20 +150,38 @@ class _AddRegister extends State<AddRegister> {
                 },               
               icon: const Icon(Icons.close)),
               IconButton(onPressed: (){
-                 _confirmSave = true;
-                 Navigator.of(context).pop(true); 
+                // Set state of for save confirmation and _showSpinner
+                setState(() {
+                  _confirmSave = true;
+                  _showSpinner = true;
+                });
+
+                // save form
+                print('\n save form \n');
+                _saveRecord(context).then;
+
+                Navigator.of(context).pop(true); 
                 },
                 icon: const Icon(Icons.check_sharp),
                 // Navigator.of(context).pop(true);
               ),
               
             ],
-          );
+          )
+          : 
+          AlertDialog(
+            content: Row(mainAxisAlignment: MainAxisAlignment.center, children: [CircularProgressIndicator(color: Colors.black12)],),
+            
+          );  
         });
       },
     );
   }
-
+  
+  // double formatCurrToDouble(String value) {
+  //   double dbValue = value.split(' ')[1] as double;
+  //   return dbValue;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -135,6 +219,11 @@ class _AddRegister extends State<AddRegister> {
                       _selections[buttonIndex] = true;
                       _fillSelected = _fill[index];
                       _borderSelected = _border[index];
+                      switch (buttonIndex) {
+                        case 0: _formData['type'] = 'profit'; break;
+                        case 1: _formData['type'] = 'spent'; break;
+                        case 2: _formData['type'] = 'invest'; break;
+                      }
                     } else {
                       _selections[buttonIndex] = false;
                     }
@@ -189,7 +278,18 @@ class _AddRegister extends State<AddRegister> {
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
                         CurrencyPtBrInputFormatter()
-                      ]
+                      ],
+                      onSaved: (value) => _formData['value'] = value as String,
+                      validator: (value) {
+                        bool isEmpty = value!.trim().isEmpty;
+                        String _zeroValue = "R\$ 0,00";
+                        if (isEmpty || value == null) {
+                          return 'Informe um valor';
+                        } else if (value  == _zeroValue) {
+                          return 'Informe um valor';
+                        }
+                        return null;
+                      },
                     ),
                     TextFormField(
                       //@TODO Validate email here!
@@ -198,8 +298,18 @@ class _AddRegister extends State<AddRegister> {
                         hintText: 'descrição *',
                         icon: Icon(Icons.info),
                       ),
+                      onSaved: (value) => _formData['desc'] = value as String,
+                      validator: (value) {
+                        bool isEmpty = value!.trim().isEmpty;
+                        
+                        if (isEmpty || value == null) {
+                          return 'Informe um valor';
+                        } 
+                        
+                        return null;
+                      },
                     ),                  
-                    TextField(
+                    TextFormField(
                       //ref: https://gist.github.com/andre-bahia/14fdb0c751822f848a364b3129df1fed
                       controller: dateinput, //editing controller of this TextField
                       decoration: const InputDecoration( 
@@ -223,11 +333,24 @@ class _AddRegister extends State<AddRegister> {
 
                             setState(() {
                               dateinput.text = formattedDate; //set output date to TextField value. 
+                              _formData['date'] = formattedDate;
                             });
-                        }else{
-                            print("Date is not selected");
+
+                        } else{
+                           print("Date is not selected");
+                           
                         }
                       },
+                      validator: (value) { 
+                        if (value!.trim().isEmpty) {
+                          return "Insira uma data";
+                        }
+                        return null;
+                      },
+
+                      
+
+
                     ),                
                   ],
                 ),
@@ -246,8 +369,18 @@ class _AddRegister extends State<AddRegister> {
             // if (validation) {
               //Provider save register
             // }
-            await showDialogConfirm(context);
-            if (_confirmSave) {
+            // bool isValid = _formKey.currentState.validate();
+            // print(isValid);
+            // _formKey.currentState!.save();
+            // print(_formData['value']);
+
+            if (_formKey.currentState!.validate()) {
+
+              await showDialogConfirm(context);
+            }
+            
+
+            if (_confirmSave) {                                      
               // ignore: use_build_context_synchronously
               Navigator.of(context).pop();
               // ignore: use_build_context_synchronously
