@@ -10,17 +10,12 @@ import 'package:firebase_database/firebase_database.dart';
 //Change notifier: implementação do padrão Observer
 class Records with ChangeNotifier {
   // FireBase
-
   // referencia CRUD: 
   // https://capsistema.com.br/index.php/2022/08/10/operacoes-crud-do-firebase-realtime-database-para-o-projeto-flutter/
+  // Conexão com DB -> Coleção 'records'
   DatabaseReference dbRecords = FirebaseDatabase.instance.ref().child('records');
-  
-  // ignore: prefer_final_fields
-  
-  
-  
+    
   List<Record> _items = [];
-  //Map<dynamic, Record> items = refreshRecords();
 
   String filter = Filter.ALL;
 
@@ -29,17 +24,14 @@ class Records with ChangeNotifier {
     if (filter != Filter.ALL) {
       return _items.where((element) => element.type == filter).toList();
     }
-    //return [..._items];
     //exlude invest for all
     return _items.where((element) => element.type != Filter.INVEST).toList();
   }
-  // void addRecord(Record record) {
-  //   _items.add(record);
-  //   notifyListeners();
-  // }
+
 
   
   void refreshRecords() async {
+    // Atualiza a list _items com o estado atual do banco de dados.
     DatabaseEvent event = await dbRecords.once();
     Map<dynamic, dynamic> records = event.snapshot.value as Map<dynamic, dynamic>;
     
@@ -60,17 +52,18 @@ class Records with ChangeNotifier {
   
 
   Future<void> addRecord(Record record) async{
+    // Adiciona um registro
     await dbRecords.push().set({
       "type": record.type,
       "value": record.value,
       "desc": record.desc,
       "date": record.date
     }).then((value) => notifyListeners());
-    //}).then((value) => refreshRecords());
     
   }
 
   Future<void> undoDelete(Record record,) async{
+    // @TODO: Desfazer remove (Ação da snack bar)
     //_items.insert(index, record);
     //print(record);
     // addRecord(record);
@@ -80,21 +73,25 @@ class Records with ChangeNotifier {
   }
 
   Future<Record> removeRecord(String id) async{
-    // _items.removeAt(index);
-
-    await dbRecords.child(id).remove();    
-    Record record = _items.where((element) => element.id == id).toList()[0];
+    await dbRecords.child(id).remove(); // Remove o registro do banco de dados
+    // recupera o registro da lista de registros carregada em memória
+    Record record = _items.where((element) => element.id == id).toList()[0]; 
+    // remove o registro da lista de registros carregada em memória
     _items.removeWhere((element) => element.id == id);
     notifyListeners();
     return record;
   }
 
   String getFilter() {
+    // retorna filtro ativo no momento
+    // Filtros: receita; gasto; investimento ou todos; 
     refreshRecords();
     return filter;
   } 
 
   void setFilter(String _filter) {
+    // Ativa um filtro
+    // Filtros: receita; gasto; investimento ou todos; 
     switch (_filter) {
       case 'all': filter = Filter.ALL; break;
       case 'spent': filter = Filter.SPENT; break;
@@ -104,6 +101,9 @@ class Records with ChangeNotifier {
     notifyListeners();
   }
 
+
+  // Soma o valor total para cada tipo de registro
+  // São métodos utilizados para exibir resumo de gastos/entradas
   double getAllSpent() {
     double val = 0.0;
     for (Record item in _items) {
