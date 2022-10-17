@@ -60,6 +60,8 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
   // ignore: empty_constructor_bodies
   @override
   Widget build(BuildContext context) {
+    // load database records
+    Provider.of<Records>(context, listen: false).refreshRecords();
   //DATA FOR WIDGET REGISTER ITEMS
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;

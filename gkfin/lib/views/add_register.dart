@@ -107,7 +107,7 @@ class _AddRegister extends State<AddRegister> {
     double dbValue = double.parse(_value);
 
     final record = Record(
-      id: 0, // for allow type
+      id: '0', // for allow type
       type: _formData['type'] as String,
       value: dbValue, 
       desc: _formData['desc'] as String,
@@ -123,6 +123,7 @@ class _AddRegister extends State<AddRegister> {
 
     // tentar inserir na coleção aqui!
     final records = Provider.of<Records>(context, listen: false);
+    records.refreshRecords();
     try {
       records.addRecord(record);
       _confirmSave = true;

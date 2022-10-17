@@ -19,7 +19,8 @@ class Records with ChangeNotifier {
   
   
   
-  List<Record> _items = DUMMY_RECORDS;
+  List<Record> _items = [];
+  //Map<dynamic, Record> items = refreshRecords();
 
   String filter = Filter.ALL;
 
@@ -32,15 +33,31 @@ class Records with ChangeNotifier {
     //exlude invest for all
     return _items.where((element) => element.type != Filter.INVEST).toList();
   }
-
   // void addRecord(Record record) {
   //   _items.add(record);
   //   notifyListeners();
   // }
 
+  
   void refreshRecords() async {
+    DatabaseEvent event = await dbRecords.once();
+    print(event.snapshot.value);
+    Map<dynamic, dynamic> records = event.snapshot.value as Map<dynamic, dynamic>;
+    records.forEach((id, recordData) { 
+      // print(key);
+      // print(value);
+      _items.add(Record(
+        id: id,
+        type: recordData['type'],
+        value: recordData['value'],
+        desc: recordData['desc'],
+        date: recordData['date']
+      ));
+    });
+    notifyListeners();
 
   }
+  
 
   void addRecord(Record record) async {
     await dbRecords.push().set({
@@ -57,13 +74,14 @@ class Records with ChangeNotifier {
     notifyListeners();
   }
 
-  void  removeRecord(int id) {
+  void  removeRecord(String id) {
     // _items.removeAt(index);
     _items.removeWhere((element) => element.id == id);
     notifyListeners();
   }
 
   String getFilter() {
+    refreshRecords();
     return filter;
   } 
 

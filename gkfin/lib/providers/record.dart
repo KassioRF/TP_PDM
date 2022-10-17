@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 class Record with ChangeNotifier {
-  final int id;
+  final String id;
   final String type;
   final double value;
   final String desc;
