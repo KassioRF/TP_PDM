@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 class Record with ChangeNotifier {
   final String id;
   final String type;
-  final double value;
+  final num value;
   final String desc;
   final String date;
   //add date

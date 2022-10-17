@@ -47,6 +47,24 @@ class _ListRecords extends State<ListRecords>{
   }
 }
 
+
+// Show snackbar when onDismissed list item
+void showSnackBar(context, Record record) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text("${record.desc} removido"),
+      behavior: SnackBarBehavior.floating,
+      action: SnackBarAction(
+        label: "desfazer",
+        onPressed: () async {
+          // coloar uma confirmação no lugar de undo
+          //await Provider.of<Records>(context, listen: false).addRecord(record);
+        },
+      ),
+    ),
+  );
+
+}
 // ignore: must_be_immutable
 class ListRecordsItem extends StatelessWidget {
   final int index;
@@ -56,22 +74,7 @@ class ListRecordsItem extends StatelessWidget {
   ListRecordsItem ({ Key? key, required this.index, required this.record, required this.refresh, } ): super(key:key);
 
 
-  // Show snackbar when onDismissed list item
-  void showSnackBar(context,id) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("${record.desc} removido"),
-        behavior: SnackBarBehavior.floating,
-        action: SnackBarAction(
-          label: "desfazer",
-          onPressed: (){
-            Provider.of<Records>(context, listen: false).undoDelete(id, record);
-          },
-        ),
-      ),
-    );
 
-  }
 
   Widget deleteBgItem() {
     return Container(
@@ -110,9 +113,20 @@ class ListRecordsItem extends StatelessWidget {
       key: ValueKey(record.id),
       background: deleteBgItem(),
       // key:  UniqueKey(),
-      onDismissed: (_) {
-        showSnackBar(context, record.id);
-        Provider.of<Records>(context, listen: false).removeRecord(record.id);
+      onDismissed: (_) async {
+        //showSnackBar(context, record.id);
+        // int _index = index;
+        // showSnackBar(context, _index);
+        // showSnackBar(context, record);
+        // Provider.of<Records>(context, listen: false).removeRecord(record.id);
+
+        //showSnackBar(context, record);
+        // Provider.of<Records>(context, listen: false).removeRecord(record.id)
+        //  .then((_record) => showSnackBar(context, _record)) as Record;
+        await Provider.of<Records>(context, listen: false).removeRecord(record.id)
+        //.then((value) => {print(value.id)});
+        .then((value) => {showSnackBar(context, value)});
+        
       },
       child: Card (
         //@TODO Make smaller items

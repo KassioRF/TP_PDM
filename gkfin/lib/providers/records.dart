@@ -41,15 +41,15 @@ class Records with ChangeNotifier {
   
   void refreshRecords() async {
     DatabaseEvent event = await dbRecords.once();
-    print(event.snapshot.value);
     Map<dynamic, dynamic> records = event.snapshot.value as Map<dynamic, dynamic>;
+    
+    _items = [];
     records.forEach((id, recordData) { 
-      // print(key);
-      // print(value);
       _items.add(Record(
         id: id,
         type: recordData['type'],
         value: recordData['value'],
+        //value: double.parse(recordData['value']),
         desc: recordData['desc'],
         date: recordData['date']
       ));
@@ -59,25 +59,34 @@ class Records with ChangeNotifier {
   }
   
 
-  void addRecord(Record record) async {
+  Future<void> addRecord(Record record) async{
     await dbRecords.push().set({
       "type": record.type,
       "value": record.value,
       "desc": record.desc,
       "date": record.date
     }).then((value) => notifyListeners());
+    //}).then((value) => refreshRecords());
     
   }
 
-  void undoDelete(int index, Record record,) {
-    _items.insert(index, record);
-    notifyListeners();
+  Future<void> undoDelete(Record record,) async{
+    //_items.insert(index, record);
+    //print(record);
+    // addRecord(record);
+    // notifyListeners();
+    print(record.id);
+    print(record.value);
   }
 
-  void  removeRecord(String id) {
+  Future<Record> removeRecord(String id) async{
     // _items.removeAt(index);
+
+    await dbRecords.child(id).remove();    
+    Record record = _items.where((element) => element.id == id).toList()[0];
     _items.removeWhere((element) => element.id == id);
     notifyListeners();
+    return record;
   }
 
   String getFilter() {

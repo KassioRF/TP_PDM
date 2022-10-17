@@ -29,10 +29,14 @@ class HomeOverView extends StatefulWidget {
 class _HomeOverView extends State<HomeOverView> {
   @override
   Widget build(BuildContext context) {
-    double allSpent = Provider.of<Records>(context, listen: false).getAllSpent();
-    double allProfit = Provider.of<Records>(context, listen: false).getAllProfit();
-    double allInvest = Provider.of<Records>(context, listen: false).getAllInvest();
-    double balance = Provider.of<Records>(context, listen: false).getBalance();
+    // double allSpent = Provider.of<Records>(context, listen: false).getAllSpent();
+    // double allProfit = Provider.of<Records>(context, listen: false).getAllProfit();
+    // double allInvest = Provider.of<Records>(context, listen: false).getAllInvest();
+    // double balance = Provider.of<Records>(context, listen: false).getBalance();
+    double allSpent = Provider.of<Records>(context, listen: true).getAllSpent();
+    double allProfit = Provider.of<Records>(context, listen: true).getAllProfit();
+    double allInvest = Provider.of<Records>(context, listen: true).getAllInvest();
+    double balance = Provider.of<Records>(context, listen: true).getBalance();
 
     return widget.filter != Filter.INVEST ? // Show's OverView for Spent/Proft's
       Column(

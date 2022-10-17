@@ -18,7 +18,8 @@ class CurrencyPtBrInputFormatter extends TextInputFormatter {
       return newValue;
     }
 
-    double value = double.parse(newValue.text);
+    num value = double.parse(newValue.text);
+    //double value = double.parse(newValue.text);
     final formatter = NumberFormat("#,##0.00", "pt_BR");
     // ignore: prefer_interpolation_to_compose_strings
     String newText = "R\$ " + formatter.format(value/100);
@@ -104,7 +105,7 @@ class _AddRegister extends State<AddRegister> {
 
     String _value = _formData['value'].toString().split(' ')[1];
     _value = _value.replaceAll(',', '.');
-    double dbValue = double.parse(_value);
+    num dbValue = double.parse(_value);
 
     final record = Record(
       id: '0', // for allow type
