@@ -1,7 +1,9 @@
 // rodar: flutter run --no-sound-null-safety
 
 // --no-sound-null-safety
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:gkfin/services/userAuthentication.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // firebase
@@ -28,6 +30,9 @@ import 'package:gkfin/widgets/login_form.dart';
 import 'package:gkfin/widgets/register_form.dart';
 import 'package:gkfin/widgets/recover_password.dart';
 
+
+import 'package:firebase_auth/firebase_auth.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Inicializar firebase com a aplicação
@@ -45,8 +50,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
-    bool _isLogedIn = false;
 
     return MultiProvider(
       providers: [
@@ -84,7 +87,8 @@ class MyApp extends StatelessWidget {
         routes: {
           // AppRoutes.HOME: (ctx) => _isLogedIn ? HomeView(title: 'Home',) : EnterView(title: 'Login', form:  LoginForm()),
           AppRoutes.SPLASH: (ctx) => const Splash(),
-          AppRoutes.HOME: (ctx) => const HomeView(title: 'Home',),
+          AppRoutes.HOME: (ctx) => UserAuthentication.isLoggedIn() ? const HomeView(title: 'Home',) : const EnterView(title: 'Login', form:  LoginForm()),
+          // AppRoutes.HOME: (ctx) => const HomeView(title: 'Home',),
           AppRoutes.LOGIN: (ctx) => const EnterView(title: 'Login', form:  LoginForm()),
           AppRoutes.REGISTER: (ctx) => const EnterView(title: 'Register', form: RegisterForm()),
           AppRoutes.RECOVERYPASS: (ctx) => const EnterView(title: 'Recover pass', form:RecoveryForm()),

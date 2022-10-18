@@ -1,6 +1,12 @@
 // Referência usada: https://github.com/hawier-dev/flutter-login-ui/blob/main/lib/register_screen.dart
 import 'package:flutter/material.dart';
 
+
+import 'package:email_validator/email_validator.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
+import '../services/userAuthentication.dart';
+import '../utils/app_routes.dart';
+
 class RegisterForm extends StatefulWidget {
   const RegisterForm({super.key});
 
@@ -13,22 +19,104 @@ class RegisterForm extends StatefulWidget {
 class _RegisterForm extends State<RegisterForm> {
   //@TODO: slider form
   final _formKey = GlobalKey<FormState>();
-  bool _isObscure = true;
+  final _formData = <String, Object>{};
 
+
+
+  bool _isObscure = true;
+  // manage state of modal progress HUD widget
+  bool _showSpinner = false;
+  
+  //  controll validEmail
+  bool _isEmailAlreadyUsed = false;
+  
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  // check if email is in the correct format
+  String? _validateEmail(String emailAddress) {
+    if (!EmailValidator.validate(emailAddress)) {
+      return 'Insira um email válido';
+    }
+    if (_isEmailAlreadyUsed) {
+      _isEmailAlreadyUsed = false;
+      return 'email já cadastrado';
+    }
+    return null;
+  }
+
+
+  // Submit register form
+  void _submitRegister() async {
+    // call register from user Authentication
+    _formKey.currentState!.save();
+
+    // dismiss keyboard during async call
+    FocusScope.of(context).requestFocus(FocusNode());
+    //print(_formData);
+    String userName = _formData['userName'] as String;
+    String emailAddress = _formData['email'] as String;
+    String password = _formData['password'] as String;
+    
+    // show spinner when createUser its request
+    setState(() {
+      _showSpinner = true;
+    });
+
+    // verify if email already exists
+    await UserAuthentication.verifyEmail(emailAddress)
+    .then((checkEmail) async {
+      setState(() {
+        if(checkEmail) {
+          _isEmailAlreadyUsed = false;
+          //String opStatus = await UserAuthentication.createUser(emailAddress, password);
+          //print(opStatus);
+          
+        }else {
+          _isEmailAlreadyUsed = true;
+          _formKey.currentState!.validate();
+          //_isEmailAlreadyUsed = false;
+        }
+
+      });
+      
+      if (checkEmail) {
+        // if email its valid then create User and redirect to HOME
+        await UserAuthentication.createUser(emailAddress, password).then((opStatus) {
+          if (opStatus == 'success') {
+            Navigator.of(context).pushNamed(AppRoutes.HOME);
+          }          
+        });      
+      }
+    });
+
+
+    setState(() {
+      _showSpinner = false; // hide spinner
+      _isEmailAlreadyUsed = false; // reset the validate email controller
+    });
+
+
+
+  }
+
+
+  
+ @override
   Widget build(BuildContext context) {
     return Column(
       // Childrens
       children: <Widget>[
-        // Screen Title                  
+        // Screen Title
         Text(
           'Cadastro',
           style: Theme.of(context).textTheme.headline4,
         ),
-
         const SizedBox(height: 20,), // space between elements
-        // Form inputs
+        // Form inputs     
         Form(
           key: _formKey,
           child: Column(                
@@ -42,6 +130,8 @@ class _RegisterForm extends State<RegisterForm> {
                   filled: true,
                   prefixIcon: Icon(Icons.account_circle),
                 ),
+                validator: (value) => value!.trim().isEmpty ? 'Nome invalido': null,
+                onSaved: (value) => _formData['userName'] = value as String,
               ),
               const SizedBox(height: 10,), // space between elements                        
               
@@ -49,6 +139,7 @@ class _RegisterForm extends State<RegisterForm> {
               TextFormField(
                 //@TODO Validate email here!
                 maxLines: 1,
+                initialValue: '',
                 decoration: const InputDecoration(
                   hintText: 'Email',
                   fillColor: Colors.white,
@@ -56,6 +147,8 @@ class _RegisterForm extends State<RegisterForm> {
                   prefixIcon: Icon(Icons.email),
           
                 ),
+                validator: (value) => _validateEmail(value!),
+                onSaved: (value) => _formData['email'] = value as String,
               ),
               const SizedBox(height: 10,), // space between elements
               // Password Field
@@ -77,15 +170,20 @@ class _RegisterForm extends State<RegisterForm> {
                     }, 
                   ),
                 ),
+                validator: (value) => value!.length < 6 ? "A senha deve ter no minimo 6 caracteres" : null,
+                onSaved: (value) => _formData['password'] = value as String,
               ),
               // CheckBox Remember me
                       
               const SizedBox(height: 10,), // space between elements
               //SignIn Buttom
+              _showSpinner ? const CircularProgressIndicator(color: Colors.black12) :
               ElevatedButton(
                 onPressed: () {
-                  // @TODO add route here!!!
-                  if (_formKey.currentState!.validate()) {}
+                  if (_formKey.currentState!.validate()) {
+                    //showDialogSpinner(context);
+                    _submitRegister();
+                  }
                 }, 
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.fromLTRB(40, 15, 40, 15),
@@ -119,8 +217,10 @@ class _RegisterForm extends State<RegisterForm> {
 
             ], // end Form fields
           ),
-        ),
+        ),        
       ],
     );
   }  
 }
+
+

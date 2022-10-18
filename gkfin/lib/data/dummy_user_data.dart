@@ -5,7 +5,7 @@ class UserPreferences {
     name: 'Sr. Economia',
     email: 'user@test.com',
     password: '123',
-    profilePic: 'assets/k4ckbuiugmfz.jpg',
+    //profilePic: 'assets/k4ckbuiugmfz.jpg',
 
   );
 }

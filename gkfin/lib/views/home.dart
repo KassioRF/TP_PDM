@@ -3,6 +3,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:gkfin/services/userAuthentication.dart';
 import 'package:gkfin/widgets/home_overview.dart';
 import 'package:gkfin/widgets/list_records.dart';
 import 'package:gkfin/widgets/filter_items.dart';
@@ -86,6 +87,7 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
               if (value == 0) {
                 Navigator.of(context).pushNamed(AppRoutes.ABOUT);
               }else if (value == 1) {
+                UserAuthentication.logOut();
                 Navigator.of(context).pushNamed(AppRoutes.SPLASH);
               }
             },

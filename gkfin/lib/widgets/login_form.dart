@@ -2,7 +2,9 @@
 // Referência usada: https://github.com/hawier-dev/flutter-login-ui/blob/main/
 //@TODO Make an correct widget build
 
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:gkfin/services/userAuthentication.dart';
 import '../utils/app_routes.dart';
 
 
@@ -18,7 +20,75 @@ class _LoginForm extends State<LoginForm> {
   
   final _formKey = GlobalKey<FormState>();
   bool _isObscure = true;
+  bool _showSpinner = false;
+
+  // form values
+  late String emailAddress;
+  late String password;
+
+  bool _emailExists = true;
+  bool _passWordIsCorrect = true;
   
+  // check if email is in the correct format
+  String? _validateEmail(String emailAddress) {
+    if (!EmailValidator.validate(emailAddress)) {
+      return 'Insira um email válido';
+    }
+    if (!_emailExists) {
+      //_emailExists = false;
+      return 'email incorreto';
+    }
+    
+    return null;
+  }
+
+  String? _validatePassWord(String password) {
+    if (!_passWordIsCorrect) {
+      return 'Senha inválida';
+    }
+  }
+
+  void _submitRegister() async {
+    _formKey.currentState!.save();
+
+    // dismiss keyboard during async call
+    FocusScope.of(context).requestFocus(FocusNode());
+    // show spinner when createUser its request
+    setState(() {
+      _showSpinner = true;
+    });
+
+    // call login method
+    await UserAuthentication.logIn(emailAddress, password)
+    .then((opStatus) {
+      if (opStatus == 'success') {
+        Navigator.of(context).pushNamed(AppRoutes.HOME);
+      } else if (opStatus == 'user-not-found') {
+        setState(() {
+          _emailExists = false;
+          _formKey.currentState!.validate();
+        });
+      } else if (opStatus == 'wrong-password') {
+        _passWordIsCorrect = false;
+        _formKey.currentState!.validate();        
+      }
+
+      setState(() {
+        // remove Spinner
+        _showSpinner = false;
+        // reset form validate controllers
+        _emailExists = true;
+        _passWordIsCorrect = true;
+      });
+
+    });
+
+    
+
+
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -46,6 +116,8 @@ class _LoginForm extends State<LoginForm> {
                   filled: true,
                   prefixIcon: Icon(Icons.email)
                 ),
+                validator: (value) => _validateEmail(value!),
+                onSaved: (value) => emailAddress = value as String,
               ),
               const SizedBox(height: 20,), // space between elements
               // Password Field
@@ -66,8 +138,10 @@ class _LoginForm extends State<LoginForm> {
                         _isObscure = !_isObscure;
                       });
                     },
-                    ),
+                  ),
                 ),
+                validator: (value) => _validatePassWord(value!),
+                onSaved: (value) => password = value as String,
               ),
               // CheckBox Remember me
 
@@ -89,11 +163,16 @@ class _LoginForm extends State<LoginForm> {
               
               const SizedBox(height: 20,), // space between elements
               //SignIn Buttom
+              
+              _showSpinner ? const CircularProgressIndicator(color: Colors.black12) :
+              
               ElevatedButton(
                 onPressed: () {
                   // @TODO add route here!!!
-                  // if (_formKey.currentState!.validate()) {}
-                  Navigator.of(context).pushNamed(AppRoutes.HOME);
+                  if (_formKey.currentState!.validate()) {
+                    _submitRegister();
+                  }
+                  //Navigator.of(context).pushNamed(AppRoutes.HOME);
                 }, 
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.fromLTRB(40, 15, 40, 15),
