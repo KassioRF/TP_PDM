@@ -2,6 +2,8 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/semantics.dart';
+import 'package:gkfin/providers/records.dart';
 import '../models/user.dart';
 
 
@@ -19,13 +21,15 @@ class UserAuthentication {
     }
   }
 
-  static Future<String> createUser (String emailAddress, String password) async {
+  static Future<String> createUser (String emailAddress, String password, setDbUser) async {
     String opStatus = '';
     try {
       final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailAddress, password: password,
       );
 
+      //setDbUser(credential.user?.uid);      
+      //Records.enableLocalPersistence();
       opStatus = 'success';
 
     } on FirebaseAuthException catch (e) {
@@ -44,14 +48,17 @@ class UserAuthentication {
     //return opStatus;
   }
 
-  static Future<String> logIn(String emailAddress, String password) async{
+  static Future<String> logIn(String emailAddress, String password, setDbUser) async{
     String opStatus = '';
     try {
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailAddress, password: password
       );
+    
+      //Records.enableLocalPersistence();
+      //setDbUser(credential.user?.uid);
       opStatus = 'success';
-      enableLocalPersistence();
+      
       
     } on FirebaseAuthException catch(e) {
       if (e.code == 'user-not-found') {
@@ -77,8 +84,8 @@ class UserAuthentication {
     }
   }
 
-  static void enableLocalPersistence() {
-    FirebaseDatabase.instance.setPersistenceEnabled(true);
-    FirebaseDatabase.instance.ref().keepSynced(true);
-  }
+  // static void enableLocalPersistence() {
+  //   FirebaseDatabase.instance.setPersistenceEnabled(true);
+  //   FirebaseDatabase.instance.ref().keepSynced(true);
+  // }
 }

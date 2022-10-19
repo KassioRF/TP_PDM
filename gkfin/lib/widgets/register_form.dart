@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 
 import 'package:email_validator/email_validator.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:provider/provider.dart';
+import '../providers/records.dart';
 import '../services/userAuthentication.dart';
 import '../utils/app_routes.dart';
 
@@ -85,7 +87,7 @@ class _RegisterForm extends State<RegisterForm> {
       
       if (checkEmail) {
         // if email its valid then create User and redirect to HOME
-        await UserAuthentication.createUser(emailAddress, password).then((opStatus) {
+        await UserAuthentication.createUser(emailAddress, password, Provider.of<Records>(context, listen: false).setDbUser).then((opStatus) {
           if (opStatus == 'success') {
             Navigator.of(context).pushNamed(AppRoutes.HOME);
           }          

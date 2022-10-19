@@ -1,5 +1,6 @@
 //ref: https://www.youtube.com/watch?v=MBZupreHjn0
 import 'package:flutter/material.dart';
+import 'package:gkfin/utils/app_routes.dart';
 import 'package:gkfin/views/home.dart';
 
 class Splash extends StatefulWidget {
@@ -16,7 +17,8 @@ class _Splash extends State<Splash> {
     super.initState();
     Future.delayed(const Duration(seconds: 3), () {
       // Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) => const HomeView(title: 'Home')));
-      Navigator.of(context).pushNamed('/login');
+      //Navigator.of(context).pushNamed('/login');
+      Navigator.of(context).pushNamed(AppRoutes.HOME);
     });
   }
   @override

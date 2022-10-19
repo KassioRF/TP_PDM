@@ -10,18 +10,34 @@ import 'package:provider/provider.dart';
 
 // Mantém o Input text no formato BRL
 //ref: https://gist.github.com/andre-bahia/14fdb0c751822f848a364b3129df1fed
+// class CurrencyPtBrInputFormatter extends TextInputFormatter {
+
+//   @override
+//   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+//     if(newValue.selection.baseOffset == 0){
+//       return newValue;
+//     }
+
+//     num value = num.parse(newValue.text);
+//     //double value = double.parse(newValue.text);
+//     final formatter = NumberFormat("#,##0.00", "pt_BR");
+//     // ignore: prefer_interpolation_to_compose_strings
+//     String newText = "R\$ " + formatter.format(value/100);
+
+//     return newValue.copyWith(
+//       text: newText,
+//       selection: TextSelection.collapsed(offset: newText.length));
+//   }
+// }
 class CurrencyPtBrInputFormatter extends TextInputFormatter {
 
-  @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
     if(newValue.selection.baseOffset == 0){
       return newValue;
     }
 
-    num value = double.parse(newValue.text);
-    //double value = double.parse(newValue.text);
+    double value = double.parse(newValue.text);
     final formatter = NumberFormat("#,##0.00", "pt_BR");
-    // ignore: prefer_interpolation_to_compose_strings
     String newText = "R\$ " + formatter.format(value/100);
 
     return newValue.copyWith(
@@ -30,8 +46,24 @@ class CurrencyPtBrInputFormatter extends TextInputFormatter {
   }
 }
 
-
-
+num currencyToNumber(String textValue) {
+  print('----------- parse record -----------');
+  //String textValue = "R\$ 123.456.789,58";
+  // remove space
+  String space = textValue.split(' ')[1];
+  //print(space);
+  // remove dots
+  String dots = space.replaceAll('.', '');
+  //print(dots);
+  //put dot for floating
+  String floatDot = dots.replaceAll(',', '.');
+  //print(floatDot);
+  // parse o num
+  num result = num.parse(floatDot);
+  //print(result);
+  
+  return result;
+}
 
 class AddRegister extends StatefulWidget {
   const AddRegister({super.key});
@@ -103,14 +135,17 @@ class _AddRegister extends State<AddRegister> {
     print(_formData['date']);
     print(_formData['type']);
 
-    String _value = _formData['value'].toString().split(' ')[1];
-    _value = _value.replaceAll(',', '.');
-    num dbValue = double.parse(_value);
+    num value = currencyToNumber(_formData['value'] as String);
+    // String _value = _formData['value'].toString().split(' ')[1];
+    // _value = _value.replaceAll(',', '.');
+    // num dbValue = num.parse(_value);
+
+    
 
     final record = Record(
       id: '0', // for allow type
       type: _formData['type'] as String,
-      value: dbValue, 
+      value: value, 
       desc: _formData['desc'] as String,
       date: _formData['date'] as String,
     );  
@@ -122,16 +157,25 @@ class _AddRegister extends State<AddRegister> {
     print(record.desc);
     print(record.date);
 
-    // tentar inserir na coleção aqui!
+    
     final records = Provider.of<Records>(context, listen: false);
-    records.refreshRecords();
+    //records.refreshRecords();
     try {
-      records.addRecord(record);
-      _confirmSave = true;
-      _showSpinner = false;
+      await records.addRecord(record).then((value) {
+        setState(() {
+          _confirmSave = true;
+          _showSpinner = false;
+        });
+      });
+      // _confirmSave = true;
+      // _showSpinner = false;
+    
     } catch (error) {
       print('error');
-     _showSpinner = false;
+      setState(() {
+        _showSpinner = false;        
+      });
+    
     }
 
   
@@ -144,7 +188,7 @@ class _AddRegister extends State<AddRegister> {
         return StatefulBuilder(builder: (context,setState){
           return !_showSpinner ? AlertDialog(
             // content:  _showSpinner ? const CircularProgressIndicator(color: Colors.black12) : const Text('< ...Confira os dados antes de salvar>'),//Text('< ...Confira os dados antes de salvar>'),
-            content:  const Text('< ...Confira os dados antes de salvar>'),//Text('< ...Confira os dados antes de salvar>'),
+            content:  const Text('Salvar registro?'),//Text('< ...Confira os dados antes de salvar>'),
             actions: <Widget>[                
               IconButton(onPressed: (){
                   _confirmSave = false;

@@ -1,7 +1,7 @@
 // rodar: flutter run --no-sound-null-safety
 
 // --no-sound-null-safety
-import 'package:firebase_database/firebase_database.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gkfin/services/userAuthentication.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -40,34 +40,54 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
+  @override
+  // ignore: library_private_types_in_public_api
+  _MyApp createState() => _MyApp();
+}
+
+class _MyApp extends State<MyApp> {
+  late StreamSubscription<User?> user;
+  final Records recordsProvider = Records();
+
+  @override
+  void initState() {
+    super.initState();
+    user = FirebaseAuth.instance.authStateChanges().listen((user) { 
+      if( user == null) {
+        debugPrint('User is currently signed out!');
+      }else {
+        debugPrint('User is signed in!');
+        // Select user database collection [/users/userId/records]
+        recordsProvider.setDbUser(user.uid);
+        // Enable localPersistence and listeners for add and remove
+        recordsProvider.enableLocalPersistence();
+      }
+    });
+  }
   
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
-    return MultiProvider(
+    return MultiProvider (
       providers: [
         ChangeNotifierProvider(
-          create: (_) => Records(),          
+          create: (_) => recordsProvider,
         )
       ],
-      child: MaterialApp(
-        // Remove the debug banner
-        debugShowCheckedModeBanner: false,
+      child: MaterialApp(        
+        debugShowCheckedModeBanner: false, // Remove the debug banner
         title: 'GK Fin',
         theme: ThemeData(
           primarySwatch: Colors.green,
           backgroundColor: Colors.white,
           fontFamily: 'Open Sans',
-          // fontFamily: GoogleFon,
-
-          // Tex Styling for Headlines, titles, bodies, and more...
+          // Text Styling for Headlines, titles, bodies, and more...
           textTheme: GoogleFonts.latoTextTheme(Theme.of(context).textTheme),
 
         ),
@@ -78,17 +98,11 @@ class MyApp extends StatelessWidget {
           GlobalWidgetsLocalizations.delegate
         ],
         // supportedLocales: [const Locale('pt', 'BR')],
-        // @TODO check if user validation is cached
-        // If true: Redirect to main view
-        // Else: Redirect to LoginView
-        //home: const LoginView(title: 'Login UI',),
         initialRoute: '/splash',
-        // Ref: Aulas: APP41/42
+        // Referência: Aulas: APP41/42
         routes: {
-          // AppRoutes.HOME: (ctx) => _isLogedIn ? HomeView(title: 'Home',) : EnterView(title: 'Login', form:  LoginForm()),
           AppRoutes.SPLASH: (ctx) => const Splash(),
           AppRoutes.HOME: (ctx) => UserAuthentication.isLoggedIn() ? const HomeView(title: 'Home',) : const EnterView(title: 'Login', form:  LoginForm()),
-          // AppRoutes.HOME: (ctx) => const HomeView(title: 'Home',),
           AppRoutes.LOGIN: (ctx) => const EnterView(title: 'Login', form:  LoginForm()),
           AppRoutes.REGISTER: (ctx) => const EnterView(title: 'Register', form: RegisterForm()),
           AppRoutes.RECOVERYPASS: (ctx) => const EnterView(title: 'Recover pass', form:RecoveryForm()),

@@ -13,10 +13,15 @@ class Records with ChangeNotifier {
   // referencia CRUD: 
   // https://capsistema.com.br/index.php/2022/08/10/operacoes-crud-do-firebase-realtime-database-para-o-projeto-flutter/
   // Conexão com DB -> Coleção 'records'
-  DatabaseReference dbRecords = FirebaseDatabase.instance.ref().child('records');
-    
-  List<Record> _items = [];
 
+  DatabaseReference dbRecords = FirebaseDatabase.instance.ref().child('anonimus');    
+  //static DatabaseReference dbRecords;
+  //DatabaseReference dbRecords;
+
+  //Records({required this.dbRecords});
+
+
+  List<Record> _items = [];
   String filter = Filter.ALL;
 
   List<Record> get items {
@@ -28,25 +33,46 @@ class Records with ChangeNotifier {
     return _items.where((element) => element.type != Filter.INVEST).toList();
   }
 
+  void enableLocalPersistence() {
+    FirebaseDatabase.instance.setPersistenceEnabled(true);
+    FirebaseDatabase.instance.ref().keepSynced(true);
+    //Listen snapshot data on add register
+    dbRecords.onChildAdded.listen((event) { 
+      debugPrint("\n\t snapshot add register \n\t>>> ${event.snapshot.key}: ${event.snapshot.value}");
+      refreshRecords();
+    });
+    
+    //Listen snapshot data on remove register
+    dbRecords.onChildRemoved.listen((event) {
+      debugPrint("\n\t >>> snapshot removed");
+      refreshRecords();
+    });
+  }
 
+  void setDbUser(String user) {
+    dbRecords = FirebaseDatabase.instance.ref('users/$user/records');
+    refreshRecords();  
+  }
   
   void refreshRecords() async {
-    // Atualiza a list _items com o estado atual do banco de dados.
+    //Atualiza a list _items com o estado atual do banco de dados.
     DatabaseEvent event = await dbRecords.once();
     Map<dynamic, dynamic> records = event.snapshot.value as Map<dynamic, dynamic>;
     
     _items = [];
-    records.forEach((id, recordData) { 
-      _items.add(Record(
-        id: id,
-        type: recordData['type'],
-        value: recordData['value'],
-        //value: double.parse(recordData['value']),
-        desc: recordData['desc'],
-        date: recordData['date']
-      ));
-    });
-    notifyListeners();
+    if (records != null) {
+      records.forEach((id, recordData) { 
+        _items.add(Record(
+          id: id,
+          type: recordData['type'],
+          value: recordData['value'],
+          //value: double.parse(recordData['value']),
+          desc: recordData['desc'],
+          date: recordData['date']
+        ));
+      });
+      notifyListeners();
+    }
 
   }
   
@@ -58,8 +84,15 @@ class Records with ChangeNotifier {
       "value": record.value,
       "desc": record.desc,
       "date": record.date
-    }).then((value) => notifyListeners());
-    
+    });
+    // .then((value) { 
+    //   // Records.dbRecords.onChildAdded.listen((event) { });
+    //   //refreshRecords();      
+    // });
+    // refreshRecords();
+    // print(' --- refreshRecords()');
+    print('notifyListeners()');
+    notifyListeners();
   }
 
   Future<void> undoDelete(Record record,) async{
@@ -72,14 +105,22 @@ class Records with ChangeNotifier {
     print(record.value);
   }
 
-  Future<Record> removeRecord(String id) async{
+  Future<void> removeRecord(String id) async{
     await dbRecords.child(id).remove(); // Remove o registro do banco de dados
-    // recupera o registro da lista de registros carregada em memória
-    Record record = _items.where((element) => element.id == id).toList()[0]; 
-    // remove o registro da lista de registros carregada em memória
-    _items.removeWhere((element) => element.id == id);
+    print('notifyListeners()');
     notifyListeners();
-    return record;
+    // recupera o registro da lista de registros carregada em memória
+    //Record record = _items.where((element) => element.id == id).toList()[0]; 
+    // Records.dbRecords.onChildAdded.listen((event) { 
+    //   print('\n\t >>> snapshot');
+    //   debugPrint("\n\t >>> ${event.snapshot.key}: ${event.snapshot.value}");
+    // });
+
+    
+    // remove o registro da lista de registros carregada em memória
+    //_items.removeWhere((element) => element.id == id);
+    //refreshRecords();
+    //return record;RR
   }
 
   String getFilter() {
@@ -138,6 +179,9 @@ class Records with ChangeNotifier {
     double spent = getAllSpent();
     double proft = getAllProfit();
     double balance = proft - spent; 
+
+
+
     return double.parse((balance).toStringAsFixed(2));
   }
 

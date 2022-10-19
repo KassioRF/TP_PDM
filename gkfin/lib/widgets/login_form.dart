@@ -5,6 +5,8 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:gkfin/services/userAuthentication.dart';
+import 'package:provider/provider.dart';
+import '../providers/records.dart';
 import '../utils/app_routes.dart';
 
 
@@ -59,7 +61,7 @@ class _LoginForm extends State<LoginForm> {
     });
 
     // call login method
-    await UserAuthentication.logIn(emailAddress, password)
+    await UserAuthentication.logIn(emailAddress, password, Provider.of<Records>(context, listen: false).setDbUser)
     .then((opStatus) {
       if (opStatus == 'success') {
         Navigator.of(context).pushNamed(AppRoutes.HOME);
