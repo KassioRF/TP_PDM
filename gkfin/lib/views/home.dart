@@ -2,6 +2,7 @@
 
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gkfin/services/userAuthentication.dart';
 import 'package:gkfin/widgets/home_overview.dart';
@@ -77,8 +78,8 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
           },
           icon: Icon(Icons.account_circle, size:40),
         ),
-
-        title: Text("Olá, ${UserPreferences.userTest.name}", style: TextStyle(fontSize: 18),),
+        title: Text("Olá, ${FirebaseAuth.instance.currentUser?.displayName}", style: TextStyle(fontSize: 18),),
+        //title: Text("Olá, ${UserPreferences.userTest.name}", style: TextStyle(fontSize: 18),),
         actions: [
           //@TODO ADD BTN EVENT
           // IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert),)        

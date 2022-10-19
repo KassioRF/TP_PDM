@@ -74,34 +74,27 @@ class _RegisterForm extends State<RegisterForm> {
       setState(() {
         if(checkEmail) {
           _isEmailAlreadyUsed = false;
-          //String opStatus = await UserAuthentication.createUser(emailAddress, password);
-          //print(opStatus);
           
         }else {
           _isEmailAlreadyUsed = true;
           _formKey.currentState!.validate();
-          //_isEmailAlreadyUsed = false;
         }
 
       });
       
       if (checkEmail) {
         // if email its valid then create User and redirect to HOME
-        await UserAuthentication.createUser(emailAddress, password, Provider.of<Records>(context, listen: false).setDbUser).then((opStatus) {
+        await UserAuthentication.createUser(emailAddress, password, userName).then((opStatus) {
           if (opStatus == 'success') {
             Navigator.of(context).pushNamed(AppRoutes.HOME);
           }          
         });      
       }
     });
-
-
     setState(() {
       _showSpinner = false; // hide spinner
       _isEmailAlreadyUsed = false; // reset the validate email controller
     });
-
-
 
   }
 
@@ -213,10 +206,8 @@ class _RegisterForm extends State<RegisterForm> {
                     child: const Text('Entrar',),
                   ),
                   const SizedBox(height: 60,), // space between elements
-                ],
-                
+                ],                
               ),
-
             ], // end Form fields
           ),
         ),        

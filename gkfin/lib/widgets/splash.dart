@@ -1,23 +1,20 @@
 //ref: https://www.youtube.com/watch?v=MBZupreHjn0
 import 'package:flutter/material.dart';
 import 'package:gkfin/utils/app_routes.dart';
-import 'package:gkfin/views/home.dart';
 
 class Splash extends StatefulWidget {
   const Splash({Key? key}) : super(key:key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _Splash createState() => _Splash ();
 }
 
 class _Splash extends State<Splash> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Future.delayed(const Duration(seconds: 3), () {
-      // Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) => const HomeView(title: 'Home')));
-      //Navigator.of(context).pushNamed('/login');
       Navigator.of(context).pushNamed(AppRoutes.HOME);
     });
   }

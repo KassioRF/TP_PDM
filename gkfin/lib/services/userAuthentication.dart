@@ -11,6 +11,7 @@ class UserAuthentication {
 
 
   static Future<bool> verifyEmail(String emailAddress) async {
+    // Verifica a disponibilidade do email
     // se o email já existir nos cadastros retorna false
     // se o email não existe nos cadastros retorna true
     var methods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(emailAddress);
@@ -21,15 +22,14 @@ class UserAuthentication {
     }
   }
 
-  static Future<String> createUser (String emailAddress, String password, setDbUser) async {
+  static Future<String> createUser (String emailAddress, String password, String userName) async {
     String opStatus = '';
     try {
       final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailAddress, password: password,
-      );
+      ).then((cred) => cred.user?.updateDisplayName(userName));
 
-      //setDbUser(credential.user?.uid);      
-      //Records.enableLocalPersistence();
+
       opStatus = 'success';
 
     } on FirebaseAuthException catch (e) {
@@ -45,7 +45,27 @@ class UserAuthentication {
     } finally {
       return opStatus;
     }
-    //return opStatus;
+
+  }
+
+
+  // must have internet connection
+  static Future<void> updateName(String name) async {
+    
+    await FirebaseAuth.instance.currentUser?.updateDisplayName(name);
+  
+  }
+  // must have internet connection
+  static Future<void> updateEmail(String emailAddress) async {
+  
+    await FirebaseAuth.instance.currentUser?.updateDisplayName(emailAddress);
+  
+  }
+  // must have internet connection
+  static Future<void> updatePassword(String password) async {
+    
+    await FirebaseAuth.instance.currentUser?.updatePassword(password);
+  
   }
 
   static Future<String> logIn(String emailAddress, String password, setDbUser) async{
@@ -53,10 +73,7 @@ class UserAuthentication {
     try {
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailAddress, password: password
-      );
-    
-      //Records.enableLocalPersistence();
-      //setDbUser(credential.user?.uid);
+      );  
       opStatus = 'success';
       
       
@@ -84,8 +101,4 @@ class UserAuthentication {
     }
   }
 
-  // static void enableLocalPersistence() {
-  //   FirebaseDatabase.instance.setPersistenceEnabled(true);
-  //   FirebaseDatabase.instance.ref().keepSynced(true);
-  // }
 }

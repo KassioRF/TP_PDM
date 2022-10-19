@@ -8,63 +8,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 
-// Mantém o Input text no formato BRL
-//ref: https://gist.github.com/andre-bahia/14fdb0c751822f848a364b3129df1fed
-// class CurrencyPtBrInputFormatter extends TextInputFormatter {
-
-//   @override
-//   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-//     if(newValue.selection.baseOffset == 0){
-//       return newValue;
-//     }
-
-//     num value = num.parse(newValue.text);
-//     //double value = double.parse(newValue.text);
-//     final formatter = NumberFormat("#,##0.00", "pt_BR");
-//     // ignore: prefer_interpolation_to_compose_strings
-//     String newText = "R\$ " + formatter.format(value/100);
-
-//     return newValue.copyWith(
-//       text: newText,
-//       selection: TextSelection.collapsed(offset: newText.length));
-//   }
-// }
-class CurrencyPtBrInputFormatter extends TextInputFormatter {
-
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    if(newValue.selection.baseOffset == 0){
-      return newValue;
-    }
-
-    double value = double.parse(newValue.text);
-    final formatter = NumberFormat("#,##0.00", "pt_BR");
-    String newText = "R\$ " + formatter.format(value/100);
-
-    return newValue.copyWith(
-      text: newText,
-      selection: TextSelection.collapsed(offset: newText.length));
-  }
-}
-
-num currencyToNumber(String textValue) {
-  print('----------- parse record -----------');
-  //String textValue = "R\$ 123.456.789,58";
-  // remove space
-  String space = textValue.split(' ')[1];
-  //print(space);
-  // remove dots
-  String dots = space.replaceAll('.', '');
-  //print(dots);
-  //put dot for floating
-  String floatDot = dots.replaceAll(',', '.');
-  //print(floatDot);
-  // parse o num
-  num result = num.parse(floatDot);
-  //print(result);
-  
-  return result;
-}
-
 class AddRegister extends StatefulWidget {
   const AddRegister({super.key});
 
@@ -126,21 +69,8 @@ class _AddRegister extends State<AddRegister> {
 
   // save form
   Future<void> _saveRecord(BuildContext context) async {
-    //
     _formKey.currentState!.save();
-
-    print(' --- form ----');
-    print(_formData['value']);
-    print(_formData['desc']);
-    print(_formData['date']);
-    print(_formData['type']);
-
     num value = currencyToNumber(_formData['value'] as String);
-    // String _value = _formData['value'].toString().split(' ')[1];
-    // _value = _value.replaceAll(',', '.');
-    // num dbValue = num.parse(_value);
-
-    
 
     final record = Record(
       id: '0', // for allow type
@@ -150,35 +80,29 @@ class _AddRegister extends State<AddRegister> {
       date: _formData['date'] as String,
     );  
     
-    print(' --- Record ---');
-    print(record.id);
-    print(record.type);
-    print(record.value);
-    print(record.desc);
-    print(record.date);
+    // print(' --- Record ---');
+    // print(record.id);
+    // print(record.type);
+    // print(record.value);
+    // print(record.desc);
+    // print(record.date);
 
     
     final records = Provider.of<Records>(context, listen: false);
-    //records.refreshRecords();
     try {
+      // Submete a criação do registro
       await records.addRecord(record).then((value) {
         setState(() {
           _confirmSave = true;
           _showSpinner = false;
         });
-      });
-      // _confirmSave = true;
-      // _showSpinner = false;
-    
+      });    
     } catch (error) {
       print('error');
       setState(() {
         _showSpinner = false;        
-      });
-    
+      });    
     }
-
-  
   }
 
   showDialogConfirm(BuildContext context) {
@@ -187,8 +111,7 @@ class _AddRegister extends State<AddRegister> {
       builder: (context){    
         return StatefulBuilder(builder: (context,setState){
           return !_showSpinner ? AlertDialog(
-            // content:  _showSpinner ? const CircularProgressIndicator(color: Colors.black12) : const Text('< ...Confira os dados antes de salvar>'),//Text('< ...Confira os dados antes de salvar>'),
-            content:  const Text('Salvar registro?'),//Text('< ...Confira os dados antes de salvar>'),
+            content:  const Text('Salvar registro?'),
             actions: <Widget>[                
               IconButton(onPressed: (){
                   _confirmSave = false;
@@ -196,20 +119,17 @@ class _AddRegister extends State<AddRegister> {
                 },               
               icon: const Icon(Icons.close)),
               IconButton(onPressed: (){
-                // Set state of for save confirmation and _showSpinner
+                // Altera o controlador para exibir o spinner enquanto a operaçõa ocorre.
                 setState(() {
                   _confirmSave = true;
                   _showSpinner = true;
                 });
-
+                
                 // save form
-                print('\n save form \n');
-                _saveRecord(context).then;
-
+                _saveRecord(context);
                 Navigator.of(context).pop(true); 
                 },
                 icon: const Icon(Icons.check_sharp),
-                // Navigator.of(context).pop(true);
               ),
               
             ],
@@ -223,11 +143,6 @@ class _AddRegister extends State<AddRegister> {
       },
     );
   }
-  
-  // double formatCurrToDouble(String value) {
-  //   double dbValue = value.split(' ')[1] as double;
-  //   return dbValue;
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -247,12 +162,12 @@ class _AddRegister extends State<AddRegister> {
         // ],
 
       ),
-      
-      //@TODO COMPONENTIZAR O FORM
+    
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            // Elementos: Tipo do registro: Receita; Gasto; Investimento
             ToggleButtons(
               isSelected: _selections,
               selectedColor: Colors.black87,
@@ -283,7 +198,7 @@ class _AddRegister extends State<AddRegister> {
                     children: const <Widget>[
                       Text('Receita'),
                       Icon(Icons.arrow_upward, color: Colors.green),
-                    ],                    
+                    ],
                   )
                 ),
                 Container(
@@ -292,7 +207,7 @@ class _AddRegister extends State<AddRegister> {
                     children: const <Widget> [
                       Text('Despesa'),
                       Icon(Icons.arrow_downward, color: Colors.red),      
-                    ],                    
+                    ],
                   )
                 ),
                 Container(
@@ -301,12 +216,13 @@ class _AddRegister extends State<AddRegister> {
                     children: const <Widget> [
                       Text('Invest.'),
                       Icon(Icons.stacked_bar_chart, color: Colors.deepPurple),      
-                    ],                    
+                    ],
                   )
-                ),                
+                ),
               ],
             ),
             
+            // ELEMENTO: Formulário
             Container(
               margin: const EdgeInsets.all(20.0),
               padding: const EdgeInsets.all(10.0),
@@ -392,12 +308,8 @@ class _AddRegister extends State<AddRegister> {
                           return "Insira uma data";
                         }
                         return null;
-                      },
-
-                      
-
-
-                    ),                
+                      },                  
+                    ),  
                   ],
                 ),
               ),  
@@ -447,10 +359,7 @@ class _AddRegister extends State<AddRegister> {
 
       ),    
     
-    
-    
-    
-    
+      
       // floatingActionButton: 
       // Visibility(
       //   visible: !keyboardIsOpen,
@@ -491,4 +400,44 @@ void showSnackBar(context) {
     ),
   );
 
+}
+
+
+// Mantém o Input text no formato BRL
+//ref: https://gist.github.com/andre-bahia/14fdb0c751822f848a364b3129df1fed
+class CurrencyPtBrInputFormatter extends TextInputFormatter {
+
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    if(newValue.selection.baseOffset == 0){
+      return newValue;
+    }
+
+    double value = double.parse(newValue.text);
+    final formatter = NumberFormat("#,##0.00", "pt_BR");
+    String newText = "R\$ " + formatter.format(value/100);
+
+    return newValue.copyWith(
+      text: newText,
+      selection: TextSelection.collapsed(offset: newText.length));
+  }
+}
+
+// Converte String no formato BRL para number
+num currencyToNumber(String textValue) {
+  debugPrint('----------- parse record -----------');
+  //String textValue = "R\$ 123.456.789,58";
+  // remove space
+  String space = textValue.split(' ')[1];
+  //print(space);
+  // remove dots
+  String dots = space.replaceAll('.', '');
+  //print(dots);
+  //put dot for floating
+  String floatDot = dots.replaceAll(',', '.');
+  //print(floatDot);
+  // parse o num
+  num result = num.parse(floatDot);
+  //print(result);
+  
+  return result;
 }

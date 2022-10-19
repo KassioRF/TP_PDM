@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'record.dart';
-import '../data/dummy_data.dart';
+//import '../data/dummy_data.dart';
 import '../utils/filter.dart';
 
 // Firebase tests
@@ -14,13 +14,11 @@ class Records with ChangeNotifier {
   // https://capsistema.com.br/index.php/2022/08/10/operacoes-crud-do-firebase-realtime-database-para-o-projeto-flutter/
   // Conexão com DB -> Coleção 'records'
 
-  DatabaseReference dbRecords = FirebaseDatabase.instance.ref().child('anonimus');    
-  //static DatabaseReference dbRecords;
-  //DatabaseReference dbRecords;
+  // Start with and collection for anonymus access, when user SignIn an collection must be assign to database;
+  // The method setDbUser() must be called for assign an database collection for an user.
+  DatabaseReference dbRecords = FirebaseDatabase.instance.ref().child('anonymus');
 
-  //Records({required this.dbRecords});
-
-
+  //Store records
   List<Record> _items = [];
   String filter = Filter.ALL;
 
@@ -34,6 +32,7 @@ class Records with ChangeNotifier {
   }
 
   void enableLocalPersistence() {
+    // Enable the local persistence and start listen add and remove Firebase actions.
     FirebaseDatabase.instance.setPersistenceEnabled(true);
     FirebaseDatabase.instance.ref().keepSynced(true);
     //Listen snapshot data on add register
@@ -50,12 +49,13 @@ class Records with ChangeNotifier {
   }
 
   void setDbUser(String user) {
+    // Set database collection for loggedIn User
     dbRecords = FirebaseDatabase.instance.ref('users/$user/records');
     refreshRecords();  
   }
   
   void refreshRecords() async {
-    //Atualiza a list _items com o estado atual do banco de dados.
+    // Refresh the list _items with current database user records state.
     DatabaseEvent event = await dbRecords.once();
     Map<dynamic, dynamic> records = event.snapshot.value as Map<dynamic, dynamic>;
     
@@ -66,7 +66,6 @@ class Records with ChangeNotifier {
           id: id,
           type: recordData['type'],
           value: recordData['value'],
-          //value: double.parse(recordData['value']),
           desc: recordData['desc'],
           date: recordData['date']
         ));
@@ -78,49 +77,30 @@ class Records with ChangeNotifier {
   
 
   Future<void> addRecord(Record record) async{
-    // Adiciona um registro
+    // Add a new record on database
     await dbRecords.push().set({
       "type": record.type,
       "value": record.value,
       "desc": record.desc,
       "date": record.date
     });
-    // .then((value) { 
-    //   // Records.dbRecords.onChildAdded.listen((event) { });
-    //   //refreshRecords();      
-    // });
-    // refreshRecords();
-    // print(' --- refreshRecords()');
-    print('notifyListeners()');
     notifyListeners();
   }
 
-  Future<void> undoDelete(Record record,) async{
-    // @TODO: Desfazer remove (Ação da snack bar)
-    //_items.insert(index, record);
-    //print(record);
-    // addRecord(record);
-    // notifyListeners();
-    print(record.id);
-    print(record.value);
-  }
+  // Future<void> undoDelete(Record record,) async{
+  //   // @TODO: Desfazer remove (Ação da snack bar)
+  //   //_items.insert(index, record);
+  //   //print(record);
+  //   // addRecord(record);
+  //   // notifyListeners();
+  //   print(record.id);
+  //   print(record.value);
+  // }
 
   Future<void> removeRecord(String id) async{
-    await dbRecords.child(id).remove(); // Remove o registro do banco de dados
-    print('notifyListeners()');
+    // Remove an specific record from database
+    await dbRecords.child(id).remove(); 
     notifyListeners();
-    // recupera o registro da lista de registros carregada em memória
-    //Record record = _items.where((element) => element.id == id).toList()[0]; 
-    // Records.dbRecords.onChildAdded.listen((event) { 
-    //   print('\n\t >>> snapshot');
-    //   debugPrint("\n\t >>> ${event.snapshot.key}: ${event.snapshot.value}");
-    // });
-
-    
-    // remove o registro da lista de registros carregada em memória
-    //_items.removeWhere((element) => element.id == id);
-    //refreshRecords();
-    //return record;RR
   }
 
   String getFilter() {
@@ -143,8 +123,8 @@ class Records with ChangeNotifier {
   }
 
 
-  // Soma o valor total para cada tipo de registro
   // São métodos utilizados para exibir resumo de gastos/entradas
+  // Somam o valor total para cada tipo de registro
   double getAllSpent() {
     double val = 0.0;
     for (Record item in _items) {
@@ -183,6 +163,11 @@ class Records with ChangeNotifier {
 
 
     return double.parse((balance).toStringAsFixed(2));
+  }
+
+  // get months that have registers
+  void getMonths() {
+    print('getMonths() List');
   }
 
 }

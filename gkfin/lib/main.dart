@@ -12,7 +12,6 @@ import 'firebase_options.dart';
 
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:provider/provider.dart';
-// import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import './utils/app_routes.dart';
@@ -62,11 +61,14 @@ class _MyApp extends State<MyApp> {
       if( user == null) {
         debugPrint('User is currently signed out!');
       }else {
-        debugPrint('User is signed in!');
+        //debugPrint('User is signed in! ${user.displayName}');
         // Select user database collection [/users/userId/records]
+        debugPrint('User is signed in! ${user.uid}');
         recordsProvider.setDbUser(user.uid);
+        debugPrint('set DB');
         // Enable localPersistence and listeners for add and remove
         recordsProvider.enableLocalPersistence();
+        debugPrint('set LocalPersist');
       }
     });
   }
