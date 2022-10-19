@@ -170,4 +170,9 @@ class Records with ChangeNotifier {
     print('getMonths() List');
   }
 
+  // chamada no frontend
+  void getDateInterval( ) {
+
+  }
+
 }
