@@ -684,7 +684,8 @@ class _UpdatePasswordForm extends State<UpdatePasswordForm> {
                     widget.backToInitialPageView();
                   },
                   child: const Text('voltar',),
-                ),          
+                ),
+                _showSpinner ? const CircularProgressIndicator(color: Colors.black12) :          
                 ElevatedButton(
                     onPressed: () {
                       // @TODO add route here!!!
