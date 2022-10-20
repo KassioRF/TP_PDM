@@ -45,7 +45,7 @@ class _RegisterForm extends State<RegisterForm> {
     }
     if (_isEmailAlreadyUsed) {
       _isEmailAlreadyUsed = false;
-      return 'email já cadastrado';
+      return 'email já cadastrado ou inválido';
     }
     return null;
   }
@@ -85,9 +85,15 @@ class _RegisterForm extends State<RegisterForm> {
       if (checkEmail) {
         // if email its valid then create User and redirect to HOME
         await UserAuthentication.createUser(emailAddress, password, userName).then((opStatus) {
+          print("<><><><><><><><><><>");
+          print(opStatus);
           if (opStatus == 'success') {
             Navigator.of(context).pushNamed(AppRoutes.HOME);
-          }          
+          }
+          if (opStatus == 'invalid-email') {
+            _isEmailAlreadyUsed = true;
+            _formKey.currentState!.validate();
+          }
         });      
       }
     });

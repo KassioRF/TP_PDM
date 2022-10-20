@@ -13,9 +13,10 @@ import 'package:gkfin/views/add_register.dart';
 import 'package:gkfin/providers/records.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/record.dart';
 import '../utils/app_routes.dart';
 import '../utils/filter.dart';
-import '../data/dummy_user_data.dart';
+import '../data/dummy_data.dart';
 
 // default box decoration 
 final _boxDecoration =  BoxDecoration(
@@ -62,9 +63,17 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
   // ignore: empty_constructor_bodies
   @override
   Widget build(BuildContext context) {
+    // test date
+    // List<Record> _addItems = DUMMY_RECORDS;
+    // print("<><><><>HOME<><><><>");
+    // for (Record i in _addItems) {
+    //   Provider.of<Records>(context, listen: false).addRecord(i);  
+    // }
+    //Provider.of<Records>(context, listen: false).setActiveMonthYear('21', '10');  
+    
     // load database records
     Provider.of<Records>(context, listen: false).refreshRecords();
-  //DATA FOR WIDGET REGISTER ITEMS
+    //DATA FOR WIDGET REGISTER ITEMS
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(

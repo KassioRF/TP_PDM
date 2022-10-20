@@ -11,7 +11,7 @@ class DateUtils {
       int month = int.parse(m.split('-')[1]);
       int year = int.parse(m.split('-')[2]);
 
-      _dates.add(DateTime(year, month));
+      _dates.add(DateTime(year, month, day));
     
     });
 
@@ -41,7 +41,7 @@ class DateUtils {
     }
 
     // 5) Parse the range list to String in format MM-yyyyy
-    DateFormat dateFormat = DateFormat("MM-yyyy");
+    DateFormat dateFormat = DateFormat("dd-MM-yy");
     List<String> strRangeDates = [];
 
     for( var d in dateInterval) {
@@ -54,4 +54,42 @@ class DateUtils {
 
     return strRangeDates;
   }
+
+  static DateTime parseStrToDateTime(String dateStr) {
+    int day = int.parse(dateStr.split('-')[0]);
+    int month = int.parse(dateStr.split('-')[1]);
+    int year = int.parse(dateStr.split('-')[2]);
+
+    return DateTime(year, month, day);
+  }
+  
+  static String parseDateTimeToStr(DateTime date) {
+    // Converte um DateTime em uma String no formato dd-MM-yyyy
+    DateFormat dateFormat = DateFormat("dd-MM-yy");
+    return dateFormat.format(date);
+  }
+
+
+  static List<String> sortDateTimeByOldest(List<String> datesStr) {
+    datesStr.sort((a,b) => a.compareTo(b));
+    return datesStr;
+  }
+  static List<String> sortDateTimeByNewest(List<String> datesStr) {
+    datesStr.sort((a,b) => b.compareTo(a));
+    return datesStr;
+  }
+  // static List<DateTime> sortDateTimeByOldest(List<DateTime> dates) {    
+  //   dates.sort((a,b) {
+  //     return a.compareTo(b);
+  //   });
+  //   return dates;
+  // }
+  // static List<DateTime> sortDateTimeByNewest(List<DateTime> dates) {
+  //   dates.sort((a,b) {
+  //     return b.compareTo(a);
+  //   });      
+  //   return dates;
+  // }
+
+
 }

@@ -61,10 +61,11 @@ class _ProfileView extends State<ProfileView> {
         mainAxisAlignment: MainAxisAlignment.center,
         //crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[        
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.blueAccent),
-            ),
+          Expanded(
+            // decoration: BoxDecoration(
+            //   border: Border.all(color: Colors.blueAccent),
+            // ),
+            //flex: 1,
             child: Align(
               alignment: Alignment.center,
               child: Icon(
@@ -76,7 +77,7 @@ class _ProfileView extends State<ProfileView> {
           ),
           const Divider(height: 5,),
           Expanded(
-            //flex: 1,
+            flex: 4,
             child: PageView(
               physics: const NeverScrollableScrollPhysics(),
               controller: _controller,

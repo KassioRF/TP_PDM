@@ -1,12 +1,19 @@
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 import 'record.dart';
 //import '../data/dummy_data.dart';
 import '../utils/filter.dart';
+import 'package:gkfin/utils/date_utils.dart';
+
 
 // Firebase tests
 import 'package:firebase_database/firebase_database.dart';
 
-
+class ActiveMonthYear {
+  late String year;
+  late String month;
+  ActiveMonthYear({required this.year, required this.month});
+}
 //Change notifier: implementação do padrão Observer
 class Records with ChangeNotifier {
   // FireBase
@@ -22,14 +29,48 @@ class Records with ChangeNotifier {
   List<Record> _items = [];
   String filter = Filter.ALL;
 
+  
+  ActiveMonthYear activeMonthYear = ActiveMonthYear(
+    month: DateFormat("MM-yy").format(DateTime.now()).split('-')[0], 
+    year: DateFormat("MM-yy").format(DateTime.now()).split('-')[1]
+  );
+
+
+  void setActiveMonthYear (String year, String month) {
+    activeMonthYear.year = year;
+    activeMonthYear.month = month;
+
+    //notifyListeners();
+  }
+
   List<Record> get items {
     //return [ ... _items];
+    _items = itemsByActiveDate();
     if (filter != Filter.ALL) {
       return _items.where((element) => element.type == filter).toList();
     }
     //exlude invest for all
     return _items.where((element) => element.type != Filter.INVEST).toList();
+
+  
   }
+
+  List<Record> itemsByActiveDate() {
+    List<Record> _itemsByDate = [];
+    for (Record item in _items) {
+      // if year
+      if (item.date.split('-')[2] == activeMonthYear.year) {
+        // if month
+        if (item.date.split('-')[1] == activeMonthYear.month) {
+          _itemsByDate.add(item);
+        }
+      }    
+    }
+    return _itemsByDate;
+  }
+
+
+
 
   void enableLocalPersistence() {
     // Enable the local persistence and start listen add and remove Firebase actions.
@@ -70,6 +111,14 @@ class Records with ChangeNotifier {
           date: recordData['date']
         ));
       });
+
+      _items.sort((a,b) {
+        DateTime _a = DateFormat("dd-MM-yy").parse(a.date);
+        DateTime _b = DateFormat("dd-MM-yy").parse(b.date);
+        return _b.compareTo(_a);
+        //DateTime(DateFormat("dd-MM-yy").parse(a.date));
+      });
+
       notifyListeners();
     }
 
@@ -127,7 +176,7 @@ class Records with ChangeNotifier {
   // Somam o valor total para cada tipo de registro
   double getAllSpent() {
     double val = 0.0;
-    for (Record item in _items) {
+    for (Record item in itemsByActiveDate()) {
       if (item.type == 'spent') {
         val += item.value;
       }
@@ -137,7 +186,7 @@ class Records with ChangeNotifier {
 
   double getAllProfit() {
     double val = 0.0;
-    for (Record item in _items) {
+    for (Record item in itemsByActiveDate()) {
       if (item.type == 'profit') {
         val += item.value;
       }
@@ -147,7 +196,7 @@ class Records with ChangeNotifier {
 
   double getAllInvest() {
     double val = 0.0;
-    for (Record item in _items) {
+    for (Record item in itemsByActiveDate()) {
       if (item.type == 'invest') {
         val += item.value;
       }
@@ -160,10 +209,10 @@ class Records with ChangeNotifier {
     double proft = getAllProfit();
     double balance = proft - spent; 
 
-
-
     return double.parse((balance).toStringAsFixed(2));
   }
+
+  
 
   // get months that have registers
   void getMonths() {
@@ -172,7 +221,17 @@ class Records with ChangeNotifier {
 
   // chamada no frontend
   void getDateInterval( ) {
+    late List<String> recordsDates = [];
 
+    for (Record r in _items) {
+      print(r);
+      recordsDates.add(r.date);
+    }
+
+    //debug
+    // for (String d in recordsDates) {
+    //   print(d);
+    // }
   }
 
 }

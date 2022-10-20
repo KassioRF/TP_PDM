@@ -37,17 +37,20 @@ class UserAuthentication {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
+        opStatus = e.code;
 
       } else if (e.code == 'email-already-in-use') {
         print('The account already exists for that email.');
         opStatus = 'email already exists';
       }
+      opStatus = e.code;
     } catch (e) {
+      print('<><><><> auth <><><><>');
       print(e);
-    } finally {
-      return opStatus;
+      opStatus = "Ops... algo deu errado :/. Tente novamente";
     }
 
+    return opStatus;
   }
 
 
