@@ -4,7 +4,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gkfin/services/userAuthentication.dart';
+import 'package:gkfin/providers/userAuthentication.dart';
 import 'package:gkfin/widgets/home_overview.dart';
 import 'package:gkfin/widgets/list_records.dart';
 import 'package:gkfin/widgets/filter_items.dart';

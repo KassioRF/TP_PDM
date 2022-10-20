@@ -2,9 +2,11 @@
 // Referência usada: https://github.com/hawier-dev/flutter-login-ui/blob/main/
 //@TODO Make an correct widget build
 
+import 'dart:async';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:gkfin/services/userAuthentication.dart';
+import 'package:gkfin/providers/userAuthentication.dart';
 import 'package:provider/provider.dart';
 import '../providers/records.dart';
 import '../utils/app_routes.dart';
@@ -61,30 +63,42 @@ class _LoginForm extends State<LoginForm> {
     });
 
     // call login method
-    await UserAuthentication.logIn(emailAddress, password, Provider.of<Records>(context, listen: false).setDbUser)
-    .then((opStatus) {
-      if (opStatus == 'success') {
-        Navigator.of(context).pushNamed(AppRoutes.HOME);
-      } else if (opStatus == 'user-not-found') {
-        setState(() {
-          _emailExists = false;
-          _formKey.currentState!.validate();
-        });
-      } else if (opStatus == 'wrong-password') {
-        _passWordIsCorrect = false;
-        _formKey.currentState!.validate();        
-      }
-
-      setState(() {
-        // remove Spinner
-        _showSpinner = false;
-        // reset form validate controllers
-        _emailExists = true;
-        _passWordIsCorrect = true;
+    try {
+      await UserAuthentication.logIn(emailAddress, password, Provider.of<Records>(context, listen: false).setDbUser)
+      .timeout(const Duration(seconds: 10))
+      .then((opStatus) {
+        print("<><><><><><><><><><><><><><><><><><><><>");
+        print("opStatus: $opStatus");
+        print("<><><><><><><><><><><><><><><><><><><><>");
+        
+        if (opStatus == 'success') {
+          Navigator.of(context).pushNamed(AppRoutes.HOME);
+        } else if (opStatus == 'user-not-found') {
+          setState(() {
+            _emailExists = false;
+            _formKey.currentState!.validate();
+          });
+        } else if (opStatus == 'wrong-password') {
+          print("<><><><><><><><><><><><><><><><><><><><>");
+          print("wrong PassWord");
+          _passWordIsCorrect = false;
+          _formKey.currentState!.validate();        
+          print("<><><><><><><><><><><><><><><><><><><><>");
+        }else {
+          showSnackBar(context, opStatus);    
+        }
       });
+    }on TimeoutException catch (e) {
+      showSnackBar(context, "Sem resposta do servidor :/ . Tente novamente ");
+    }
 
+    setState(() {
+      // remove Spinner
+      _showSpinner = false;
+      // reset form validate controllers
+      _emailExists = true;
+      _passWordIsCorrect = true;
     });
-
     
 
 
@@ -172,7 +186,10 @@ class _LoginForm extends State<LoginForm> {
                 onPressed: () {
                   // @TODO add route here!!!
                   if (_formKey.currentState!.validate()) {
+                    print("<><><><><><><><><><><><><><><><><><><><>");
+                    print("validate");
                     _submitRegister();
+                    print("<><><><><><><><><><><><><><><><><><><><>");
                   }
                   //Navigator.of(context).pushNamed(AppRoutes.HOME);
                 }, 
@@ -215,3 +232,16 @@ class _LoginForm extends State<LoginForm> {
 
 }
 
+void showSnackBar(context, String msgFeedback) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(msgFeedback),
+      behavior: SnackBarBehavior.floating,
+      action: SnackBarAction(
+        label: "ok",
+        onPressed: () async {},
+      ),
+    ),
+  );
+
+}

@@ -1,7 +1,12 @@
+import 'dart:async';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gkfin/providers/userAuthentication.dart';
 import '../data/dummy_user_data.dart';
+import 'package:gkfin/utils/checkInternetConn.dart';
+
 
 class ProfileView extends StatefulWidget {
   const ProfileView ({Key?key}) : super(key:key);
@@ -22,74 +27,11 @@ class _ProfileView extends State<ProfileView> {
     });
   }
 
-  final _formKey = GlobalKey<FormState>();
-  final _user = UserPreferences.userTest;
-
-
-  late String _email;
-  late String _userName;
-  late String _passWord;
-  
-  // manage state of progress Spinner
-  late bool _showSpinner;
-  // controll validEmail
-  late bool _isEmailAlreadyUsed;
-  // controll wich field must be updated
-  late bool _updateUserName;
-  late bool _updateEmail;
-  late bool _updatePassWord;
-
-  bool _isObscure = true;
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _showSpinner = false;
-    _isEmailAlreadyUsed = false;
-    _updateUserName = false;
-    _updateEmail = false;
-    _updatePassWord = false;
   }
-
-  // validator controller for email input
-  String? _validateEmail(String emailAddress) {
-    if (!EmailValidator.validate(emailAddress)) {
-      return 'Insira um email válido';
-    }
-    if (_isEmailAlreadyUsed) {
-      _isEmailAlreadyUsed = false;
-      return 'email já cadastrado';
-    }
-    return null;
-  }
-  
-  void _submitForm() async {
-    _formKey.currentState!.save();
-
-    // dismiss keyboard during async call
-    FocusScope.of(context).requestFocus(FocusNode());
-
-    // check fields to update
-    // se erro em alguma operação return 0; show snackbar
-    if (_updateUserName) {
-
-    }
-
-    if (_updateEmail) {
-
-    }
-
-    if (_updatePassWord) {
-
-
-    }
-
-    // show snackbar feedback
-
-
-  }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +39,6 @@ class _ProfileView extends State<ProfileView> {
       //prevent resize when keyboard shows up
       // resizeToAvoidBottomPadding: false,
       // resizeToAvoidBottomInset: false,
-      
       appBar: AppBar(
         // toolbarHeight: 60,
         //@TODO ADD BTN EVENT
@@ -113,6 +54,7 @@ class _ProfileView extends State<ProfileView> {
 
       ),
 
+      resizeToAvoidBottomInset: false,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         //crossAxisAlignment: CrossAxisAlignment.center,
@@ -160,8 +102,13 @@ class _ProfileView extends State<ProfileView> {
 
                             child: IconButton(
                               icon: Icon(Icons.edit, color: Colors.grey.withOpacity(.9),),
-                              onPressed: () {
-                                _controller.animateToPage(1,duration : const Duration(milliseconds: 150),curve:Curves.easeIn);
+                              onPressed: () async {
+                                bool internetConn = await CheckInternetConn();
+                                if (internetConn) {
+                                  _controller.animateToPage(1,duration : const Duration(milliseconds: 150),curve:Curves.easeIn);
+                                }else {
+                                  showSnackBar(context, "Atualizar os dados requer conexão com a internet");
+                                }
                               },
                             ),
                           ),
@@ -188,8 +135,13 @@ class _ProfileView extends State<ProfileView> {
                           Expanded(
                             child: IconButton(
                               icon: Icon(Icons.edit, color: Colors.grey.withOpacity(.9),),
-                              onPressed: () {
-                                _controller.animateToPage(2,duration : const Duration(milliseconds: 150),curve:Curves.easeIn);
+                              onPressed: () async {
+                                bool internetConn = await CheckInternetConn();
+                                if (internetConn) {
+                                  _controller.animateToPage(2,duration : const Duration(milliseconds: 150),curve:Curves.easeIn);
+                                }else {
+                                  showSnackBar(context, "Atualizar os dados requer conexão com a internet");
+                                }
                               },
                             ),
                           ),
@@ -216,8 +168,13 @@ class _ProfileView extends State<ProfileView> {
                           Expanded(
                             child: IconButton(
                               icon: Icon(Icons.edit, color: Colors.grey.withOpacity(.9),),
-                              onPressed: () {
-                                _controller.animateToPage(3,duration : const Duration(milliseconds: 150),curve:Curves.easeIn);
+                              onPressed: () async {
+                                bool internetConn = await CheckInternetConn();
+                                if (internetConn) {
+                                  _controller.animateToPage(3,duration : const Duration(milliseconds: 150),curve:Curves.easeIn);
+                                }else {
+                                  showSnackBar(context, "Atualizar os dados requer conexão com a internet");
+                                }                                
                               },
                             ),
                           ),
@@ -229,19 +186,10 @@ class _ProfileView extends State<ProfileView> {
                 // FORMS
                 // USERNAME FORM            
                 UpdateUserNameForm(backToInitialPageView: backToInitialPageView,),
-                // Center(
-                //   child: Text('UserName Form'),
-                // ),
                 // // EMAIL FORM
                 UpdateEmailForm(backToInitialPageView: backToInitialPageView,),
-                // Center(
-                //   child: Text('Email Form'),                      
-                // ),
                 // // PASSWORD FORM
                 UpdatePasswordForm(backToInitialPageView: backToInitialPageView,),
-                // Center(
-                //   child: Text('PassWord Form'),
-                // ),
               ],
             ),
           ),
@@ -258,6 +206,54 @@ class _ProfileView extends State<ProfileView> {
 
 
 }
+
+// Widgets e funções auxiliares
+
+
+void showSnackBar(context, String msgFeedback) {
+  // Exibe um snackbar com uma mensagem de feedback
+  // Utilizada ao final de uma operação
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(msgFeedback),
+      behavior: SnackBarBehavior.floating,
+      action: SnackBarAction(
+        label: "ok",
+        onPressed: () async {},
+      ),
+    ),
+  );
+
+}
+
+String? _validateEmail(String emailAddress, bool _isEmailAlreadyUsed, setState) {
+  // Validação Email
+  if (!EmailValidator.validate(emailAddress)) {
+    return 'Insira um email válido';
+  }
+  
+  if (_isEmailAlreadyUsed) {
+    setState(() => _isEmailAlreadyUsed = false);      
+    return 'email já cadastrado';
+  }
+  return null;
+}
+String? _validatePassword(String password, bool _passWordIsCorrect, setState) {
+  // Validação Senha
+  if (password.trim().isEmpty) {
+    return "preencha os campos";
+  }
+  if (password.length < 6 ) {
+    return "A senha deve ter no minimo 6 caracteres";
+  }
+  if (!_passWordIsCorrect) {
+    return 'Senha incorreta';
+  }
+  return null;
+}
+
+
+
 
 // Username Form Widget
 class UpdateUserNameForm extends StatefulWidget {
@@ -279,20 +275,20 @@ class _UpdateUserNameForm extends State<UpdateUserNameForm> {
 
   void _submitForm() async {
     _formKey.currentState!.save();
-
     // dimiss keyboard during async call
     FocusScope.of(context).requestFocus(FocusNode());
 
-    print(newUserName);
-
-    // try update name await for an response!!!!!
-    // Verify if we have connection to send request
-
-
-    // Show Snackbar
-
-    setState(() {
-      _showSpinner = false;
+    await UserAuthentication.updateName(newUserName)
+    .then((opStatus) {
+      setState(() {
+        _showSpinner = false;
+      });
+      if (opStatus == 'success') {
+        showSnackBar(context, "Nome atualizado!");
+      }else {
+        showSnackBar(context, "Ops! Algo deu errado...");
+      }
+      widget.backToInitialPageView();        
     });
   }
   
@@ -338,9 +334,7 @@ class _UpdateUserNameForm extends State<UpdateUserNameForm> {
                     onPressed: () {
                       
                       if (_formKey.currentState!.validate()) {
-                        setState(() {
-                          _showSpinner = true;
-                        });
+                        setState(() { _showSpinner = true; });
                         _submitForm();
 
                       }
@@ -376,32 +370,73 @@ class UpdateEmailForm extends StatefulWidget {
 }
 class _UpdateEmailForm extends State<UpdateEmailForm> {
   final _formKey = GlobalKey<FormState>();
+  final _formKeyPassword = GlobalKey<FormState>();
 
+  late bool _isEmailAlreadyUsed;
+  late bool _passWordIsCorrect;
+  // change visibility of form input
+  late bool _isObscure;
   // manage state of progress Spinner
   late bool _showSpinner;
   late String newEmail;
+  late String password;
+  
   @override
   void initState() {
+    super.initState();
     _showSpinner = false;
+    _isObscure = false;
+    _passWordIsCorrect = true;
+    _isEmailAlreadyUsed = false;
   }
 
   void _submitForm() async {
     _formKey.currentState!.save();
-
+    _formKeyPassword.currentState!.save();
     // dimiss keyboard during async call
     FocusScope.of(context).requestFocus(FocusNode());
-
+    setState(() => _showSpinner = true );
+    print("\n\t ------------- <><><<><><><><><><><>");
     print(newEmail);
+    
+    final String confirmAuth = await UserAuthentication.reautenticateUser(password);
+    if (confirmAuth == 'success') {
+      setState(() => _passWordIsCorrect = true );
+      print(confirmAuth);
+      print("\n\t ------------- <><><<><><><><><><><>");
+      try {
+        await UserAuthentication.updateEmail(newEmail).timeout(const Duration(seconds: 10))
+        .then((opStatus) {
+          setState(() {
+            _showSpinner = false;
+          });
 
-    // try update name await for an response!!!!!
-    // Verify if we have connection to send request
+          if (opStatus == 'success') {
+            showSnackBar(context, "Email atualizado!");
+            widget.backToInitialPageView();
+          }else {
+            print(opStatus);
+            showSnackBar(context, "Ops! Algo deu errado... ");
+          }
+        }); 
 
+      }on TimeoutException catch (e) {
+        showSnackBar(context, "Sem resposta do servidor :/ . Tente novamente ");
+      }
 
-    // Show Snackbar
+    }else {
+      _passWordIsCorrect = false;
+      _formKeyPassword.currentState!.validate();
+      
+    }
+    
 
     setState(() {
       _showSpinner = false;
+      _isEmailAlreadyUsed = false;
+      _passWordIsCorrect = true;
     });
+
   }
   
 
@@ -415,19 +450,50 @@ class _UpdateEmailForm extends State<UpdateEmailForm> {
         child: Column(
           children: <Widget>[                      
             Form(
+              key: _formKey,
               child: TextFormField(
                 decoration: InputDecoration(
                   hintText: FirebaseAuth.instance.currentUser?.email,
                   prefixIcon: const Icon(Icons.email),
                 ),
-                validator: (value) => value!.trim().isEmpty ? 'Email Inválido': null,
+                validator: (value) => _validateEmail(value as String, _isEmailAlreadyUsed, setState),
                 onSaved: (value) {
                   setState(() {
-                    
+                    newEmail = value as String;
                   });
                 },
               ),
             ),
+            const SizedBox(height: 20,), // space between elements
+            Form(
+              key: _formKeyPassword,
+              child: 
+                TextFormField(
+                  //@TODO Validate password here!
+                  maxLines: 1,                  
+                  obscureText: _isObscure,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.lock),
+                    hintText: "* requer a senha p/ atualizar",
+                    suffixIcon: IconButton(
+                      icon: Icon( _isObscure ?  Icons.visibility_off : Icons.visibility),
+                      onPressed: () {
+                        setState(() {
+                          _isObscure = !_isObscure;
+                        });
+                      }, 
+                    ),
+                  ),
+                  //validator: (value) => value!.length < 6 ? "A senha deve ter no minimo 6 caracteres" : null,
+                  validator: (value)  => _validatePassword(value as String, _passWordIsCorrect, setState),
+                  onSaved: (value) {
+                    setState(() {
+                      password = value as String;
+                      // _updatePassWord = true;
+                    });
+                  },
+                ),
+            ),            
             const SizedBox(height: 50,), // space between elements
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -438,13 +504,15 @@ class _UpdateEmailForm extends State<UpdateEmailForm> {
                     widget.backToInitialPageView();
                   },
                   child: const Text('voltar',),
-                ),          
+                ),
+                _showSpinner ? const CircularProgressIndicator(color: Colors.black12) :
                 ElevatedButton(
                     onPressed: () {
                       // @TODO add route here!!!
-                      // if (_formKey.currentState!.validate()) {
-                      //   //_submitRegister();
-                      // }
+                      if (_formKey.currentState!.validate() && _formKeyPassword.currentState!.validate()) {
+                        print("\n\t ------------- <><><<><><><><><><><>");
+                        _submitForm();
+                      }
                       //Navigator.of(context).pushNamed(AppRoutes.HOME);
                     }, 
                     style: ElevatedButton.styleFrom(
@@ -476,36 +544,67 @@ class UpdatePasswordForm extends StatefulWidget {
 }
 class _UpdatePasswordForm extends State<UpdatePasswordForm> {
   final _formKey = GlobalKey<FormState>();
-
+  final _formKeyCurrPassWord = GlobalKey<FormState>();
   // change visibility of form input
   late bool _isObscure;
   // manage state of progress Spinner
   late bool _showSpinner;
+  late String currentPassWord;
   late String newPassWord;
+
+  late bool _passWordIsCorrect; 
   @override
   void initState() {
     super.initState();
     _isObscure = true;
     _showSpinner = false;
+    _passWordIsCorrect = true;
 
   }
 
   void _submitForm() async {
     _formKey.currentState!.save();
-
+    _formKeyCurrPassWord.currentState!.save();
     // dimiss keyboard during async call
     FocusScope.of(context).requestFocus(FocusNode());
 
-    print(newPassWord);
+    setState(() => _showSpinner = true );
 
-    // try update name await for an response!!!!!
-    // Verify if we have connection to send request
+   final String confirmAuth = await UserAuthentication.reautenticateUser(currentPassWord);
+    if (confirmAuth == 'success') {
+      setState(() => _passWordIsCorrect = true );
+      print(confirmAuth);
+      try {
+        await UserAuthentication.updatePassword(newPassWord).timeout(const Duration(seconds: 10))
+        .then((opStatus) {
+          setState(() {
+            _showSpinner = false;
+          });
 
+          print("\n\t ------------- $opStatus <><><<><><><><><><><>");
+          if (opStatus == 'success') {
+            showSnackBar(context, "Senha atualizada atualizada!");
+            widget.backToInitialPageView();
+          }else {
+            print(opStatus);
+            showSnackBar(context, "Ops! Algo deu errado... ");
+          }
+        }); 
 
-    // Show Snackbar
+      }on TimeoutException catch (e) {
+        showSnackBar(context, "Sem resposta do servidor :/ . Tente novamente ");
+      }
+
+    }else {
+      _passWordIsCorrect = false;
+      _formKeyCurrPassWord.currentState!.validate();
+      
+    }
+    
 
     setState(() {
       _showSpinner = false;
+      _passWordIsCorrect = true;
     });
   }
 
@@ -518,6 +617,7 @@ class _UpdatePasswordForm extends State<UpdatePasswordForm> {
         child: Column(
           children: <Widget>[                      
             Form(
+              key: _formKeyCurrPassWord,
               child: 
                 TextFormField(
                   //@TODO Validate password here!
@@ -525,7 +625,37 @@ class _UpdatePasswordForm extends State<UpdatePasswordForm> {
                   obscureText: _isObscure,
                   decoration: InputDecoration(
                     prefixIcon: const Icon(Icons.lock),
-                    hintText: "Insira a nova senha",
+                    hintText: "Senha atual",
+                    suffixIcon: IconButton(
+                      icon: Icon( _isObscure ?  Icons.visibility_off : Icons.visibility),
+                      onPressed: () {
+                        setState(() {
+                          _isObscure = !_isObscure;
+                        });
+                      }, 
+                    ),
+                  ),
+                  //validator: (value) => value!.length < 6 ? "A senha deve ter no minimo 6 caracteres" : null,
+                  validator: (value)  => _validatePassword(value as String, _passWordIsCorrect, setState),
+                  onSaved: (value) {
+                    setState(() {
+                      currentPassWord = value as String;
+                      // _updatePassWord = true;
+                    });
+                  },
+                ),
+            ),
+            const SizedBox(height: 20,), // space between elements
+            Form(
+              key: _formKey,
+              child: 
+                TextFormField(
+                  //@TODO Validate password here!
+                  maxLines: 1,                  
+                  obscureText: _isObscure,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.lock),
+                    hintText: "Nova senha",
                     suffixIcon: IconButton(
                       icon: Icon( _isObscure ?  Icons.visibility_off : Icons.visibility),
                       onPressed: () {
@@ -538,23 +668,10 @@ class _UpdatePasswordForm extends State<UpdatePasswordForm> {
                   validator: (value) => value!.length < 6 ? "A senha deve ter no minimo 6 caracteres" : null,
                   onSaved: (value) {
                     setState(() {
-                      // _passWord = value as String;
-                      // _updatePassWord = true;
+                      newPassWord = value as String;
                     });
                   },
-                ),              
-              
-              // TextFormField(
-              //   decoration: const InputDecoration(
-              //     prefixIcon: Icon(Icons.lock),
-              //   ),
-              //   validator: (value) => value!.length < 6 ? 'A senha deve conter no mínimo 6 caracteres': null,
-              //   onSaved: (value) {
-              //     setState(() {
-                    
-              //     });
-              //   },
-              // ),
+                ),
             ),
             const SizedBox(height: 50,), // space between elements
             Row(
@@ -571,9 +688,11 @@ class _UpdatePasswordForm extends State<UpdatePasswordForm> {
                 ElevatedButton(
                     onPressed: () {
                       // @TODO add route here!!!
-                      // if (_formKey.currentState!.validate()) {
-                      //   //_submitRegister();
-                      // }
+                      print("<><><><> validate <><><><><>");
+                      if (_formKey.currentState!.validate() && _formKeyCurrPassWord.currentState!.validate()) {
+                        print("<><><><> SUBMIT <><><><><>");
+                        _submitForm();
+                      }
                       //Navigator.of(context).pushNamed(AppRoutes.HOME);
                     }, 
                     style: ElevatedButton.styleFrom(

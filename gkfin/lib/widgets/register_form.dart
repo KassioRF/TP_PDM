@@ -6,7 +6,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:provider/provider.dart';
 import '../providers/records.dart';
-import '../services/userAuthentication.dart';
+import '../providers/userAuthentication.dart';
 import '../utils/app_routes.dart';
 
 class RegisterForm extends StatefulWidget {

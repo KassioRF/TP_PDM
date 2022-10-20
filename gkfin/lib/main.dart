@@ -3,7 +3,7 @@
 // --no-sound-null-safety
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:gkfin/services/userAuthentication.dart';
+import 'package:gkfin/providers/userAuthentication.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // firebase

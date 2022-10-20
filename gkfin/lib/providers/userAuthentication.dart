@@ -1,6 +1,8 @@
 
 
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/semantics.dart';
 import 'package:gkfin/providers/records.dart';
@@ -50,22 +52,45 @@ class UserAuthentication {
 
 
   // must have internet connection
-  static Future<void> updateName(String name) async {
-    
-    await FirebaseAuth.instance.currentUser?.updateDisplayName(name);
+  static Future<String> updateName(String name) async {
+    late String opStatus;    
+    try {
+
+      await FirebaseAuth.instance.currentUser?.updateDisplayName(name);
+      opStatus = 'success';
+
+    } on FirebaseAuthException catch (e) {
+      opStatus = e.code;
+    }
+
+    return opStatus;
   
   }
   // must have internet connection
-  static Future<void> updateEmail(String emailAddress) async {
-  
-    await FirebaseAuth.instance.currentUser?.updateDisplayName(emailAddress);
+  static Future<String> updateEmail(String emailAddress) async {
+    late String opStatus;    
+    try {
+      await FirebaseAuth.instance.currentUser?.updateEmail(emailAddress);
+      opStatus = 'success';
+
+    } on FirebaseAuthException catch (e) {
+      opStatus = e.code;
+    }
+
+    return opStatus;
   
   }
   // must have internet connection
-  static Future<void> updatePassword(String password) async {
-    
-    await FirebaseAuth.instance.currentUser?.updatePassword(password);
-  
+  static Future<String> updatePassword(String password) async {
+    late String opStatus;
+    try {
+      await FirebaseAuth.instance.currentUser?.updatePassword(password);
+      opStatus = 'success';
+    }on FirebaseAuthException catch (e) {
+      opStatus = e.code;
+    }
+
+    return opStatus;
   }
 
   static Future<String> logIn(String emailAddress, String password, setDbUser) async{
@@ -83,6 +108,8 @@ class UserAuthentication {
       }else if (e.code == 'wrong-password') {
         opStatus = e.code;
 
+      } else {
+        opStatus = e.code;
       }
     } finally {
         return opStatus;
@@ -93,6 +120,24 @@ class UserAuthentication {
     await FirebaseAuth.instance.signOut();
   }
 
+  static Future<String> reautenticateUser(String password) async {
+    late String opStatus;
+    try {
+      String email = await FirebaseAuth.instance.currentUser?.email as String;
+      final credential = EmailAuthProvider.credential(email: email, password: password);
+      await FirebaseAuth.instance.currentUser?.reauthenticateWithCredential(credential);
+      
+      // await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password)
+      // .then((credential) async {
+      //   await FirebaseAuth.instance.currentUser?.reauthenticateWithCredential(credential)
+      // });
+      opStatus = 'success';
+    }on FirebaseAuthException catch(e) {
+      opStatus = e.code;
+    }
+    return opStatus;
+  }
+
   static bool isLoggedIn() {
     if (FirebaseAuth.instance.currentUser != null)  {
       return true;
@@ -100,5 +145,7 @@ class UserAuthentication {
       return false;
     }
   }
+
+
 
 }
