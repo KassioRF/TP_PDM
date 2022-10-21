@@ -68,12 +68,14 @@ class _HomeOverView extends State<HomeOverView> {
                           child: Text(
                             "\$ ${balance}" ,
                             style: TextStyle (
-                              color: Colors.blue.withOpacity(1),
+                              //color: Colors.blue.withOpacity(1),
+                              color: balance >= 0 ?  Colors.blue.withOpacity(1) : Colors.redAccent.withOpacity(.8),
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                        const Icon(Icons.currency_exchange_sharp, color: Colors.blue, size: 16,),
+                        Icon(Icons.currency_exchange_sharp, color: balance >= 0 ? Colors.blue : Colors.redAccent, size: 16,),
+                        //const Icon(Icons.currency_exchange_sharp, color: Colors.blue, size: 16,),
                         
                       ],
                     ),

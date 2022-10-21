@@ -1,8 +1,11 @@
 // Referência usada: https://github.com/hawier-dev/flutter-login-ui/blob/main/lib/register_screen.dart
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 
 import 'package:email_validator/email_validator.dart';
+import 'package:gkfin/utils/snack_bar_generic.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:provider/provider.dart';
 import '../providers/records.dart';
@@ -69,34 +72,41 @@ class _RegisterForm extends State<RegisterForm> {
     });
 
     // verify if email already exists
-    await UserAuthentication.verifyEmail(emailAddress)
-    .then((checkEmail) async {
-      setState(() {
-        if(checkEmail) {
-          _isEmailAlreadyUsed = false;
-          
-        }else {
-          _isEmailAlreadyUsed = true;
-          _formKey.currentState!.validate();
-        }
-
-      });
-      
-      if (checkEmail) {
-        // if email its valid then create User and redirect to HOME
-        await UserAuthentication.createUser(emailAddress, password, userName).then((opStatus) {
-          print("<><><><><><><><><><>");
-          print(opStatus);
-          if (opStatus == 'success') {
-            Navigator.of(context).pushNamed(AppRoutes.HOME);
-          }
-          if (opStatus == 'invalid-email') {
+    try  {
+      await UserAuthentication.verifyEmail(emailAddress)
+      .timeout(const Duration(seconds: 10))
+      .then((checkEmail) async {
+        setState(() {
+          if(checkEmail) {
+            _isEmailAlreadyUsed = false;
+            
+          }else {
             _isEmailAlreadyUsed = true;
             _formKey.currentState!.validate();
           }
-        });      
-      }
-    });
+
+        });
+        
+        if (checkEmail) {
+          // if email its valid then create User and redirect to HOME
+          await UserAuthentication.createUser(emailAddress, password, userName).then((opStatus) {
+            print("<><><><><><><><><><>");
+            print(opStatus);
+            if (opStatus == 'success') {
+              Navigator.of(context).pushNamed(AppRoutes.HOME);
+            }
+            if (opStatus == 'invalid-email') {
+              _isEmailAlreadyUsed = true;
+              _formKey.currentState!.validate();
+            }
+          });      
+        }
+      });
+    
+    } on TimeoutException catch (e) {
+      showSnackBar(context, "Sem resposta do servidor :/ . Tente novamente ");
+    }
+
     setState(() {
       _showSpinner = false; // hide spinner
       _isEmailAlreadyUsed = false; // reset the validate email controller
@@ -148,8 +158,9 @@ class _RegisterForm extends State<RegisterForm> {
                   prefixIcon: Icon(Icons.email),
           
                 ),
-                validator: (value) => _validateEmail(value!),
-                onSaved: (value) => _formData['email'] = value as String,
+                validator: (value) => _validateEmail(value?.replaceAll(" ", '') as String),
+                onSaved: (value) => _formData['email'] = value?.replaceAll(" ", '') as String,
+
               ),
               const SizedBox(height: 10,), // space between elements
               // Password Field

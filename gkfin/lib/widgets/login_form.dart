@@ -1,4 +1,3 @@
-
 // Referência usada: https://github.com/hawier-dev/flutter-login-ui/blob/main/
 //@TODO Make an correct widget build
 
@@ -63,6 +62,7 @@ class _LoginForm extends State<LoginForm> {
     });
 
     // call login method
+    print("<><><> Submit:$emailAddress<><><>");
     try {
       await UserAuthentication.logIn(emailAddress, password, Provider.of<Records>(context, listen: false).setDbUser)
       .timeout(const Duration(seconds: 10))
@@ -132,8 +132,8 @@ class _LoginForm extends State<LoginForm> {
                   filled: true,
                   prefixIcon: Icon(Icons.email)
                 ),
-                validator: (value) => _validateEmail(value!),
-                onSaved: (value) => emailAddress = value as String,
+                validator: (value) => _validateEmail(value?.replaceAll(" ", '') as String),
+                onSaved: (value) => emailAddress = value?.replaceAll(" ", '') as String,
               ),
               const SizedBox(height: 20,), // space between elements
               // Password Field

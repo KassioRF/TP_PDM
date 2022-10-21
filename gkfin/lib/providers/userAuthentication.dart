@@ -123,6 +123,28 @@ class UserAuthentication {
     await FirebaseAuth.instance.signOut();
   }
 
+
+  static Future<String> recoveryPassword(String email) async {
+    late String opStatus;
+
+    try {
+      print("<><><> await send recovery <><><>");
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      // .then((value) => print(value.))
+      // .catchError((e) => opStatus = e.code);
+      
+      // .then((value) => opStatus = 'success')
+      // .catchError((e) => opStatus = e.code);
+
+      opStatus = 'success';
+    } on FirebaseAuthException catch(e) {
+      print("<> await send recovery return ${e.code} <>");
+      opStatus = e.code;
+    }
+
+    return opStatus;
+  }
+
   static Future<String> reautenticateUser(String password) async {
     late String opStatus;
     try {
@@ -152,3 +174,4 @@ class UserAuthentication {
 
 
 }
+// kassiorf1@gmail.com

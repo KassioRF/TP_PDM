@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gkfin/providers/records.dart';
+import 'package:provider/provider.dart';
 
 
 class PickDate extends StatefulWidget {
@@ -10,19 +12,49 @@ class PickDate extends StatefulWidget {
 }
 
 class _PickDate extends State<PickDate> {
-  // final List<String> test = [
-  //   'Abril de 2022',
-  //   'Maio de 2022',
-  //   'Junho de 2022',
-  //   'Julho de 2022',
-  //   'Agosto de 2022',
-  //   'Setembro de 2022',
-  // ];
-  final String _currMonth = 'Setembro de 2022';
+  late String _currMonth;
+  late String _currYear;
+  late String _currDate;
+  @override
+  void initState() {
+    // TODO: implement initState
+    // _currMonth = Provider.of<Records>(context, listen: true).activeMonthYear.month;
+    // _currYear = Provider.of<Records>(context, listen: true).activeMonthYear.year;
+    super.initState();
+    _currMonth = Provider.of<Records>(context, listen: false).activeMonthYear.month;
+    _currYear = Provider.of<Records>(context, listen: false).activeMonthYear.year;
+    _currDate = "mês $_currMonth/$_currYear";
+  }
 
+  Future<void> changeCurrDate(String action) async {
+    if (action == 'next') {
+      await Provider.of<Records>(context, listen: false).setNextMonth()
+      .then((_) {
+        setState(() {
+          _currMonth = Provider.of<Records>(context, listen: false).activeMonthYear.month;
+          _currYear =  Provider.of<Records>(context, listen: false).activeMonthYear.year;
+          _currDate = "mês $_currMonth/$_currYear";      
+        });
+      });
+    }else if (action == 'prev') {
+      await Provider.of<Records>(context, listen: false).setPreviusMonth()
+      .then((_) {
+        setState(() {
+          _currMonth = Provider.of<Records>(context, listen: false).activeMonthYear.month;
+          _currYear =  Provider.of<Records>(context, listen: false).activeMonthYear.year;
+          _currDate = "mês $_currMonth/$_currYear";      
+        });
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    //double balance = Provider.of<Records>(context, listen: true).getBalance();
+    
+  
+
+
     // final PageController controller = PageController();
     return Row(                
         // crossAxisAlignment: CrossAxisAlignment.center,
@@ -31,10 +63,14 @@ class _PickDate extends State<PickDate> {
           //@TODO ADD BTN EVENT
           IconButton(
             padding: EdgeInsets.zero,
-            onPressed: (){}, 
+            onPressed: () {
+              // Provider.of<Records>(context, listen: false).setPreviusMonth();
+              changeCurrDate("prev");
+              //print("$_currMonth - $_currYear");
+            }, 
             icon: const Icon(Icons.keyboard_arrow_left),
           ),
-          Text(_currMonth,
+          Text(_currDate,
             style: const TextStyle(
               fontStyle: FontStyle.italic,
               fontSize: 12,
@@ -43,7 +79,11 @@ class _PickDate extends State<PickDate> {
           //@TODO ADD BTN EVENT
           IconButton(
             padding: EdgeInsets.zero,
-            onPressed: (){},
+            onPressed: (){
+              //Provider.of<Records>(context, listen: false).setNextMonth();
+              changeCurrDate("next");
+              // print("$_currMonth - $_currYear");
+            },
             icon: const Icon(Icons.keyboard_arrow_right),
           
           ),
@@ -51,50 +91,3 @@ class _PickDate extends State<PickDate> {
     );
   }
 }
-
-// @TODO test PAgeView.builder()
-    // return Row(                
-    //     // crossAxisAlignment: CrossAxisAlignment.center,
-    //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    //     children: <Widget>[
-    //       //@TODO ADD BTN EVENT
-    //       IconButton(
-    //         padding: EdgeInsets.zero,
-    //         onPressed: (){}, 
-    //         icon: const Icon(Icons.keyboard_arrow_left),
-    //       ),
-
-    //       SizedBox(
-    //         // height: 25,
-    //         width: 150,
-    //         child: PageView.builder(
-    //           controller: controller,
-    //           itemBuilder: (context, index) {
-    //             return Text(
-    //               test[index],
-    //               style: const TextStyle(
-    //                 fontStyle: FontStyle.italic,
-    //                 fontSize: 12,
-    //                 backgroundColor: Colors.grey,
-    //               ),                                
-    //             );
-    //           },
-    //           scrollDirection: Axis.horizontal,
-    //           itemCount: test.length,     
-    //         ),
-    //       ),
-    //       // Text(_currMonth,
-    //       //     style: const TextStyle(
-    //       //       fontStyle: FontStyle.italic,
-    //       //       fontSize: 12,
-    //       //     ),
-    //       //   ),
-    //       //@TODO ADD BTN EVENT
-    //       IconButton(
-    //         padding: EdgeInsets.zero,
-    //         onPressed: (){},
-    //         icon: const Icon(Icons.keyboard_arrow_right),
-          
-    //       ),
-    //     ],
-    // );

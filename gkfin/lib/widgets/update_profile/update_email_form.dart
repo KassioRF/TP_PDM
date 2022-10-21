@@ -104,10 +104,10 @@ class _UpdateEmailForm extends State<UpdateEmailForm> {
                   hintText: FirebaseAuth.instance.currentUser?.email,
                   prefixIcon: const Icon(Icons.email),
                 ),
-                validator: (value) => CredentialsValidationForm.validateEmail(value as String, _isEmailAlreadyUsed, setState),
+                validator: (value) => CredentialsValidationForm.validateEmail(value?.replaceAll(" ", '') as String, _isEmailAlreadyUsed, setState),
                 onSaved: (value) {
                   setState(() {
-                    newEmail = value as String;
+                    newEmail = value?.replaceAll(" ", '') as String;
                   });
                 },
               ),
