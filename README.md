@@ -13,7 +13,8 @@
 ## Sobre
 GK Finanças é a sua solução portátil  para facilitar a Organização e Controle de suas finanças pessoais!
 
-Tecnologias Back-End-Example: NestJS, Prisma, NodeJS, BD: PostgreeSQL Autenticação: JWT Token
+Tecnologia Front-End: Firebase
+Tecnologia Back-End: Firebase
 
 Você poderá:
 
