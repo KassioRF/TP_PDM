@@ -13,7 +13,7 @@
 ## Sobre
 GK Finanças é a sua solução portátil  para facilitar a Organização e Controle de suas finanças pessoais!
 
-Tecnologia Front-End: Firebase
+Tecnologia Front-End: Flutter,
 Tecnologia Back-End: Firebase
 
 Você poderá:
