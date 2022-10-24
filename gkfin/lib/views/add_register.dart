@@ -64,7 +64,8 @@ class _AddRegister extends State<AddRegister> {
     //dateinput.text = "";
     
     dateinput.text = DateFormat('dd-MM-yy').format(DateTime.now());
-    print(dateinput.text);
+    _formData['date'] = dateinput.text;
+    
     _showSpinner = false;
 
     if (Provider.of<Records>(context, listen: false).getFilter() == Filter.INVEST) {
