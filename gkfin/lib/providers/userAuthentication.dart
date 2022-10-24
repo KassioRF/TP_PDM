@@ -130,12 +130,6 @@ class UserAuthentication {
     try {
       print("<><><> await send recovery <><><>");
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-      // .then((value) => print(value.))
-      // .catchError((e) => opStatus = e.code);
-      
-      // .then((value) => opStatus = 'success')
-      // .catchError((e) => opStatus = e.code);
-
       opStatus = 'success';
     } on FirebaseAuthException catch(e) {
       print("<> await send recovery return ${e.code} <>");
@@ -152,10 +146,6 @@ class UserAuthentication {
       final credential = EmailAuthProvider.credential(email: email, password: password);
       await FirebaseAuth.instance.currentUser?.reauthenticateWithCredential(credential);
       
-      // await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password)
-      // .then((credential) async {
-      //   await FirebaseAuth.instance.currentUser?.reauthenticateWithCredential(credential)
-      // });
       opStatus = 'success';
     }on FirebaseAuthException catch(e) {
       opStatus = e.code;

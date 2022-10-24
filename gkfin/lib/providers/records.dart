@@ -137,12 +137,10 @@ class Records with ChangeNotifier {
       });
 
       notifyListeners();
-      print("<><><><><> Listeners notify <><><><><>");
     }
 
   }
   
-
   Future<void> addRecord(Record record) async{
     // Add a new record on database
     await dbRecords.push().set({
@@ -153,16 +151,6 @@ class Records with ChangeNotifier {
     });
     notifyListeners();
   }
-
-  // Future<void> undoDelete(Record record,) async{
-  //   // @TODO: Desfazer remove (Ação da snack bar)
-  //   //_items.insert(index, record);
-  //   //print(record);
-  //   // addRecord(record);
-  //   // notifyListeners();
-  //   print(record.id);
-  //   print(record.value);
-  // }
 
   Future<void> removeRecord(String id) async{
     // Remove an specific record from database
@@ -245,14 +233,8 @@ class Records with ChangeNotifier {
     DateTime currDate = DateFormat("MM-yy").parse("${activeMonthYear.month}-${activeMonthYear.year}");
     DateTime nextDate = DateTime(currDate.year, currDate.month + 1);
 
-    if(await isDateInRegistersDateInterval('next', nextDate)) {
-      print("<><><><><><><><><>");
-      print('next ok!');
-      
+    if(await isDateInRegistersDateInterval('next', nextDate)) {      
       setActiveMonthYear(DateFormat("MM-yy").format(nextDate).split('-')[1], DateFormat("MM-yy").format(nextDate).split('-')[0]);
-    }else {
-      print("<><><><><><><><><>");
-      print('next invalido!');
     }
     
   }
@@ -263,12 +245,7 @@ class Records with ChangeNotifier {
 
     // if prevDate have register
     if(await isDateInRegistersDateInterval('prev', prevDate)) {
-      print("<><><><><><><><><>");
-      print('previus ok!');
       setActiveMonthYear(DateFormat("MM-yy").format(prevDate).split('-')[1], DateFormat("MM-yy").format(prevDate).split('-')[0]);
-    }else {
-      print("<><><><><><><><><>");
-      print('previus invalido!');
     }
 
   }  

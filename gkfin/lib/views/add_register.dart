@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gkfin/providers/record.dart';
 import 'package:gkfin/providers/records.dart';
+import 'package:gkfin/utils/app_routes.dart';
 import 'package:intl/intl.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+
+import '../utils/filter.dart';
 
 
 class AddRegister extends StatefulWidget {
@@ -20,8 +23,6 @@ class _AddRegister extends State<AddRegister> {
   final _formKey = GlobalKey<FormState>(); // variable for controll form events
   final _formData = <String, Object>{}; // variable for store data form
   
-  // _selections it's for assign selected record type
-  // _selections[0] == profit | _selections[1] == spent | _selections[2] == invest
   final List<bool> _selections = List.generate(3, (_)=>false); 
 
   // define colors for each record type (spent, profit, invest);
@@ -56,12 +57,23 @@ class _AddRegister extends State<AddRegister> {
   void initState() {
     super.initState();
     _confirmSave = false;
-    _selections[0] = true;
-    _formData['type'] = 'profit';
+    // _selections[0] = true;
+    // _formData['type'] = 'profit';
     _fillSelected = _fill[0];
     _borderSelected = _border[0];
-    dateinput.text = "";
+    //dateinput.text = "";
+    
+    dateinput.text = DateFormat('dd-MM-yy').format(DateTime.now());
+    print(dateinput.text);
     _showSpinner = false;
+
+    if (Provider.of<Records>(context, listen: false).getFilter() == Filter.INVEST) {
+      _selections[2] = true;
+      _formData['type'] = 'invest';
+    } else {
+      _selections[0] = true;
+      _formData['type'] = 'profit';
+    }
     
     
   }
@@ -79,15 +91,7 @@ class _AddRegister extends State<AddRegister> {
       desc: _formData['desc'] as String,
       date: _formData['date'] as String,
     );  
-    
-    // print(' --- Record ---');
-    // print(record.id);
-    // print(record.type);
-    // print(record.value);
-    // print(record.desc);
-    // print(record.date);
-
-    
+        
     final records = Provider.of<Records>(context, listen: false);
     try {
       // Submete a criação do registro
@@ -96,6 +100,12 @@ class _AddRegister extends State<AddRegister> {
           _confirmSave = true;
           _showSpinner = false;
         });
+        if (record.type == 'invest') {
+          Provider.of<Records>(context, listen: false).setFilter(Filter.INVEST);
+        }else {
+          Provider.of<Records>(context, listen: false).setFilter(Filter.ALL);
+        }
+            
       });    
     } catch (error) {
       print('error');
@@ -276,7 +286,7 @@ class _AddRegister extends State<AddRegister> {
                       controller: dateinput, //editing controller of this TextField
                       decoration: const InputDecoration( 
                         icon: Icon(Icons.calendar_today), //icon of text field
-                        labelText: "data *" //label text of field
+                        //labelText: "data *" //label text of field
                       ),
                       readOnly: true,  //set it true, so that user will not able to edit text
                       onTap: () async {
@@ -319,34 +329,28 @@ class _AddRegister extends State<AddRegister> {
       ),
       
     
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.check), // cuidado com esse const!
-        //@TODO ADD BTN EVENT
-        onPressed: () async{
-            //@TODO VALIDATE
-            // if (validation) {
-              //Provider save register
-            // }
-            // bool isValid = _formKey.currentState.validate();
-            // print(isValid);
-            // _formKey.currentState!.save();
-            // print(_formData['value']);
-
+      floatingActionButton: Visibility(
+        visible: !keyboardIsOpen,
+        child: FloatingActionButton(
+          child: const Icon(Icons.check), // cuidado com esse const!
+          //@TODO ADD BTN EVENT
+          onPressed: () async {
             if (_formKey.currentState!.validate()) {
-
               await showDialogConfirm(context);
-            }
-            
-
+            }            
             if (_confirmSave) {                                      
               // ignore: use_build_context_synchronously
               Navigator.of(context).pop();
               // ignore: use_build_context_synchronously
+              // await Navigator.popAndPushNamed(context, AppRoutes.HOME);
+              // ignore: use_build_context_synchronously
               showSnackBar(context);
             }
           },
-
+        ),
       ),
+      
+      
       // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       //Bottom bar
@@ -358,27 +362,6 @@ class _AddRegister extends State<AddRegister> {
         child: Container(height: 37,)
 
       ),    
-    
-      
-      // floatingActionButton: 
-      // Visibility(
-      //   visible: !keyboardIsOpen,
-      //   child: FloatingActionButton.extended(
-      //     // child: const Icon(Icons.add), // cuidado com esse const!
-      //     label: const Text('Adicionar'),
-      //     //@TODO ADD BTN EVENT
-      //     onPressed: (){
-      //       //@TODO VALIDATE
-      //       // if (validation) {
-      //         //Provider save register
-      //       // }
-
-      //       showSnackBar(context);
-      //       Navigator.of(context).pop();
-      //     },
-
-      //   ),
-      // )
     );
   }
 }

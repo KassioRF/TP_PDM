@@ -50,14 +50,18 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
   void initState(){
     super.initState();
     _tabController = TabController(vsync: this, length: 2);
+    // _tabController.addListener(_handleTabSelection);
+    // _currentTab = Filter.ALL;
+      
     _tabController.addListener(_handleTabSelection);
-    _currentTab = Filter.ALL;
+    _currentTab = Provider.of<Records>(context, listen: false).getFilter();
+
   }
 
   void _handleTabSelection(){
     setState(() {
-      _currentTab = _tabController.index == 0 ? Filter.ALL : Filter.INVEST;   
-    });
+       _currentTab = _tabController.index == 0 ? Filter.ALL : Filter.INVEST;   
+    });    
   }
 
   // ignore: empty_constructor_bodies
@@ -134,7 +138,7 @@ class _HomeView extends State<HomeView> with SingleTickerProviderStateMixin {
             Expanded(
               flex:3,
               //header
-              child:HomeOverView(filter: _currentTab)
+              child:HomeOverView(filter: Provider.of<Records>(context, listen: false).getFilter())
             ),
             // Data slider
             Expanded(

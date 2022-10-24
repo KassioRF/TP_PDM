@@ -54,15 +54,7 @@ class _FilterItems extends State<FilterItems>{
                     Provider.of<Records>(context, listen: false).setFilter(value!);
                   },                                    
                 ),
-                // RadioListTile(
-                //   title: const Text('investimentos'),
-                //   value: Filter.INVEST, 
-                //   groupValue: activeFilter, 
-                //   onChanged: (value){
-                //     Provider.of<Records>(context, listen: false).setFilter(value!);
-                //   },                  
-                // ),
-                             
+
               ],
             )
           ),
@@ -97,16 +89,7 @@ class _FilterItems extends State<FilterItems>{
             },
           icon: const Icon(Icons.filter_list, color: Colors.black54,),
           ),
-        ),
-        const Expanded(
-          flex: 3,
-          child: TextField(
-            cursorColor: Colors.grey,
-            decoration: InputDecoration(
-              suffixIcon: Icon(Icons.search),
-            ),
-          ),
-        ),
+        ),      
       ],
     );      
 
