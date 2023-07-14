@@ -1,16 +1,17 @@
-# GK Finanças - TP II
+# CSI608TP: App mobile com Flutter
 
-## Participantes
--  [Gustavo Estevam Sena (Aluno)](https://github.com/Gultes)
--  [Kassio Rodrigues Ferreira (Aluno)](https://github.com/KassioRF)
-- Vicente Jose Peixoto de Amorin (Orientador)
+## CSI608 - Programação para Dispositivos Móveis :: 2021.2
 
-## Objetivos
+### Participantes
+-  [Gustavo Estevam Sena](https://github.com/Gultes)
+-  [Kassio Rodrigues Ferreira](https://github.com/KassioRF)
+
+### Objetivos
 - Aplicar os conhecimentos do desenvolvimento móvel utilizando a linguagem de Programação Flutter.
 - Entender os conceitos do Material Design, interatividade e interação com o usuário.
 - Criar uma aplicação móvel que resolve um problema real, no nosso caso, de Gerenciamento de Finanças Pessoas de um usuário.
 
-## Sobre
+### Sobre
 GK Finanças é a sua solução portátil  para facilitar a Organização e Controle de suas finanças pessoais!
 
 Tecnologia Front-End: Flutter,
@@ -41,7 +42,7 @@ $ Com o Flutter e ambiente instalado na máquina:
 # Ou alternativamente: Baixar e instalar o GK-Financas.apk no seu smartphone!
 ```
 
-## Referências utilizadas na construção do Front-end da aplicação:
+### Referências utilizadas na construção do Front-end da aplicação:
 
 - Exibir um ListView dentro de um Column():
 
